@@ -22,35 +22,53 @@ export default function TestLogin() {
       const { data: sessionData } = await supabase.auth.getSession()
       setMessage('Sessão atual: ' + (sessionData.session ? 'Ativa' : 'Inativa'))
 
-      // Teste 2: Tentar login
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: 'ndrd7980@gmail.com',
-        password: 'admin123',
-      })
+      // Teste 2: Verificar se o usuário existe
+      const { data: userExists, error: userError } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('email', 'ndrd7980@gmail.com')
+        .single()
 
-      if (error) {
-        setMessage('Erro no login: ' + error.message)
-        console.error('Detalhes do erro:', error)
+      if (userError) {
+        console.error('Erro ao verificar usuário:', userError)
+        setMessage('Erro ao verificar usuário: ' + userError.message)
+      } else if (!userExists) {
+        setMessage('Usuário não encontrado')
+        console.log('Usuário não encontrado')
       } else {
-        setMessage('Login bem sucedido! Usuário: ' + data.user?.email)
-        console.log('Dados do usuário:', data.user)
-        
-        // Verificar se existe na tabela usuarios
-        const { data: userData, error: userError } = await supabase
-          .from('usuarios')
-          .select('*')
-          .eq('id', data.user?.id)
-          .single()
-        
-        if (userError) {
-          console.error('Erro ao buscar usuário na tabela:', userError)
-          setMessage(message + '\nErro ao buscar na tabela usuarios: ' + userError.message)
-        } else if (!userData) {
-          console.log('Usuário não encontrado na tabela usuarios')
-          setMessage(message + '\nUsuário não encontrado na tabela usuarios')
+        console.log('Usuário encontrado:', userExists)
+        setMessage('Usuário encontrado')
+
+        // Teste 3: Tentar login
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: 'ndrd7980@gmail.com',
+          password: 'admin123',
+        })
+
+        if (error) {
+          setMessage('Erro no login: ' + error.message)
+          console.error('Detalhes do erro:', error)
         } else {
-          console.log('Dados do usuário na tabela:', userData)
-          setMessage(message + '\nTipo do usuário: ' + userData.tipo)
+          setMessage('Login bem sucedido! Usuário: ' + data.user?.email)
+          console.log('Dados do usuário:', data.user)
+          
+          // Verificar se existe na tabela usuarios
+          const { data: userData, error: userError } = await supabase
+            .from('usuarios')
+            .select('*')
+            .eq('id', data.user?.id)
+            .single()
+          
+          if (userError) {
+            console.error('Erro ao buscar usuário na tabela:', userError)
+            setMessage(message + '\nErro ao buscar na tabela usuarios: ' + userError.message)
+          } else if (!userData) {
+            console.log('Usuário não encontrado na tabela usuarios')
+            setMessage(message + '\nUsuário não encontrado na tabela usuarios')
+          } else {
+            console.log('Dados do usuário na tabela:', userData)
+            setMessage(message + '\nTipo do usuário: ' + userData.tipo)
+          }
         }
       }
 
