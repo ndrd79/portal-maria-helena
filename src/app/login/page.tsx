@@ -14,9 +14,17 @@ export default function Login() {
     setError(null)
 
     try {
-      const formData = new FormData(e.currentTarget)
-      const email = formData.get('email') as string
-      const password = formData.get('password') as string
+      const form = e.currentTarget
+      const emailInput = form.querySelector<HTMLInputElement>('input[type="email"]')
+      const passwordInput = form.querySelector<HTMLInputElement>('input[type="password"]')
+
+      if (!emailInput || !passwordInput) {
+        console.error('Campos de formulário não encontrados')
+        throw new Error('Erro interno do formulário')
+      }
+
+      const email = emailInput.value
+      const password = passwordInput.value
 
       console.log('Iniciando processo de login...')
       console.log('Email:', email)
@@ -68,6 +76,10 @@ export default function Login() {
     }
   }
 
+  const handleClick = () => {
+    console.log('Botão clicado')
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -109,6 +121,7 @@ export default function Login() {
                   <button
                     type="submit"
                     disabled={loading}
+                    onClick={handleClick}
                     className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
                       loading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
