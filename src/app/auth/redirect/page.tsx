@@ -10,18 +10,26 @@ export default function AuthRedirect() {
         console.log('Verificando sessão...')
         const { data: { session } } = await supabase.auth.getSession()
         
+        console.log('Dados da sessão:', session)
+        
         if (!session?.user) {
           console.log('Sem sessão ativa, redirecionando para login...')
           window.location.href = '/login'
           return
         }
 
+        console.log('ID do usuário:', session.user.id)
+        console.log('Email do usuário:', session.user.email)
         console.log('Sessão encontrada, verificando tipo do usuário...')
+        
         const { data: userData, error: userError } = await supabase
           .from('usuarios')
-          .select('tipo')
+          .select('*')
           .eq('id', session.user.id)
           .single()
+
+        console.log('Dados do usuário:', userData)
+        console.log('Erro ao buscar usuário:', userError)
 
         if (userError) {
           console.error('Erro ao buscar tipo do usuário:', userError)
@@ -35,17 +43,13 @@ export default function AuthRedirect() {
 
         console.log('Tipo do usuário:', userData.tipo)
         
-        // Redirecionar baseado no tipo
-        if (userData.tipo === 'admin') {
-          window.location.href = '/admin/dashboard'
-        } else if (userData.tipo === 'comerciante') {
-          window.location.href = '/comerciante/dashboard'
-        } else {
-          window.location.href = '/dashboard'
-        }
+        // Por enquanto, vamos redirecionar para uma rota que sabemos que existe
+        window.location.href = '/'
+        
       } catch (error) {
         console.error('Erro no redirecionamento:', error)
-        window.location.href = '/login'
+        // Não redirecionamos para login aqui para poder ver os erros no console
+        // window.location.href = '/login'
       }
     }
 
