@@ -1,31 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Alert } from '@/components/Alert'
 
 export default function Login() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  // Verificar se já está logado
-  useEffect(() => {
-    async function checkSession() {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (session) {
-          console.log('Já existe uma sessão ativa, redirecionando...')
-          window.location.replace('/admin/dashboard')
-        }
-      } catch (err) {
-        console.error('Erro ao verificar sessão:', err)
-      }
-    }
-    checkSession()
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -37,83 +18,48 @@ export default function Login() {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      console.log('Tentando fazer login...', { email })
+      console.log('Tentando fazer login...')
 
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
       if (signInError) {
-        console.error('Erro no login:', signInError)
         throw signInError
       }
 
-      if (!signInData.user) {
-        console.error('Usuário não encontrado após login')
+      if (!data.user) {
         throw new Error('Usuário não encontrado')
       }
 
-      console.log('Login bem sucedido, buscando perfil do usuário...')
-
-      // Verificar se o usuário existe na tabela usuarios e está ativo
+      // Verificar tipo do usuário
       const { data: userData, error: userError } = await supabase
         .from('usuarios')
-        .select('*')
-        .eq('id', signInData.user.id)
+        .select('tipo')
+        .eq('id', data.user.id)
         .single()
 
       if (userError) {
-        console.error('Erro ao buscar usuário:', userError)
         throw userError
       }
 
       if (!userData) {
-        console.error('Perfil de usuário não encontrado')
-        throw new Error('Perfil de usuário não encontrado')
+        throw new Error('Perfil não encontrado')
       }
 
-      if (userData.status !== 'ativo') {
-        console.error('Usuário inativo')
-        throw new Error('Usuário inativo. Entre em contato com o administrador.')
-      }
-
-      console.log('Perfil encontrado, redirecionando...', { tipo: userData.tipo })
-
-      // Aguardar um momento para garantir que a sessão foi estabelecida
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      // Tentar obter a sessão novamente para confirmar
-      const { data: { session } } = await supabase.auth.getSession()
-      console.log('Sessão confirmada:', !!session)
-
-      if (!session) {
-        throw new Error('Sessão não estabelecida após login')
-      }
-
-      // Redirecionar baseado no tipo de usuário
-      const redirectTo = userData.tipo === 'admin' 
-        ? '/admin/dashboard'
-        : userData.tipo === 'comerciante'
-          ? '/comerciante/dashboard'
-          : '/dashboard'
-
-      console.log('Redirecionando para:', redirectTo)
-      
-      // Forçar redirecionamento com URL completa
-      const baseUrl = window.location.origin
-      window.location.replace(`${baseUrl}${redirectTo}`)
-    } catch (err) {
-      console.error('Erro completo:', err)
-      if (err instanceof Error) {
-        if (err.message.includes('Invalid login credentials')) {
-          setError('Email ou senha incorretos')
-        } else {
-          setError(err.message)
-        }
+      // Redirecionar baseado no tipo
+      if (userData.tipo === 'admin') {
+        document.location.href = '/admin/dashboard'
+      } else if (userData.tipo === 'comerciante') {
+        document.location.href = '/comerciante/dashboard'
       } else {
-        setError('Erro ao fazer login')
+        document.location.href = '/dashboard'
       }
+
+    } catch (err) {
+      console.error('Erro:', err)
+      setError(err instanceof Error ? err.message : 'Erro ao fazer login')
     } finally {
       setLoading(false)
     }

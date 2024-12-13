@@ -46,11 +46,7 @@ export async function middleware(req: NextRequest) {
   }
 }
 
+// Removendo middleware temporariamente para debug
 export const config = {
-  matcher: [
-    '/admin/:path*',
-    '/comerciante/:path*',
-    '/dashboard/:path*',
-    '/login',
-  ],
+  matcher: [],
 }
