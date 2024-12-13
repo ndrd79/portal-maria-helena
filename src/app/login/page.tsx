@@ -4,11 +4,26 @@ import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Alert } from '@/components/Alert'
 
+function TestButton() {
+  return (
+    <button
+      onClick={() => {
+        console.log('Teste de clique')
+        alert('Botão de teste clicado!')
+      }}
+      className="mb-4 px-4 py-2 bg-red-500 text-white rounded"
+    >
+      Botão de Teste
+    </button>
+  )
+}
+
 export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleLogin = async () => {
+    alert('Botão de login clicado!')
     console.log('Botão clicado - Iniciando login...')
     setLoading(true)
     setError(null)
@@ -83,6 +98,8 @@ export default function Login() {
             <div className="divide-y divide-gray-200">
               <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                 <h1 className="text-2xl font-bold mb-8 text-center">Login</h1>
+                
+                <TestButton />
                 
                 {error && <Alert type="error" message={error} />}
 
