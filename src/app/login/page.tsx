@@ -20,7 +20,7 @@ export default function Login() {
 
       console.log('Tentando fazer login...')
 
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
@@ -29,33 +29,8 @@ export default function Login() {
         throw signInError
       }
 
-      if (!data.user) {
-        throw new Error('Usuário não encontrado')
-      }
-
-      // Verificar tipo do usuário
-      const { data: userData, error: userError } = await supabase
-        .from('usuarios')
-        .select('tipo')
-        .eq('id', data.user.id)
-        .single()
-
-      if (userError) {
-        throw userError
-      }
-
-      if (!userData) {
-        throw new Error('Perfil não encontrado')
-      }
-
-      // Redirecionar baseado no tipo
-      if (userData.tipo === 'admin') {
-        document.location.href = '/admin/dashboard'
-      } else if (userData.tipo === 'comerciante') {
-        document.location.href = '/comerciante/dashboard'
-      } else {
-        document.location.href = '/dashboard'
-      }
+      // Redirecionar para a página de redirecionamento
+      window.location.href = '/auth/redirect'
 
     } catch (err) {
       console.error('Erro:', err)
