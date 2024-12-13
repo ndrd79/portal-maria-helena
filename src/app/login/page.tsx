@@ -1,12 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Alert } from '@/components/Alert'
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [envVars, setEnvVars] = useState<{[key: string]: string}>({})
+
+  useEffect(() => {
+    // Mostrar variáveis de ambiente públicas
+    setEnvVars({
+      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || 'não definido',
+      NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'não definido',
+    })
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -19,7 +28,7 @@ export default function Login() {
       const password = formData.get('password') as string
 
       console.log('Iniciando login...')
-      console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+      console.log('Variáveis de ambiente:', envVars)
 
       // Verificar se já existe uma sessão
       const { data: { session: currentSession } } = await supabase.auth.getSession()
@@ -103,6 +112,16 @@ export default function Login() {
                 <h1 className="text-2xl font-bold mb-8 text-center">Login</h1>
                 
                 {error && <Alert type="error" message={error} />}
+
+                {/* Debug de variáveis de ambiente */}
+                <div className="bg-gray-100 p-4 rounded-md text-sm mb-4">
+                  <h2 className="font-bold mb-2">Debug:</h2>
+                  {Object.entries(envVars).map(([key, value]) => (
+                    <div key={key}>
+                      <strong>{key}:</strong> {value}
+                    </div>
+                  ))}
+                </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
