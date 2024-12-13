@@ -63,16 +63,16 @@ export default function Login() {
 
       console.log('Perfil encontrado, redirecionando...', { tipo: userData.tipo })
 
-      // Redirecionar baseado no tipo de usuário
+      // Redirecionar baseado no tipo de usuário usando window.location
       switch (userData.tipo) {
         case 'admin':
-          router.push('/admin/dashboard')
+          window.location.href = '/admin/dashboard'
           break
         case 'comerciante':
-          router.push('/comerciante/dashboard')
+          window.location.href = '/comerciante/dashboard'
           break
         default:
-          router.push('/dashboard')
+          window.location.href = '/dashboard'
       }
     } catch (err) {
       console.error('Erro completo:', err)
