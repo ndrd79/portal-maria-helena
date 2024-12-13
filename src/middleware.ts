@@ -16,19 +16,14 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith('/comerciante') ||
     req.nextUrl.pathname.startsWith('/dashboard')
   )) {
+    // Não redirecionar se for a página de registro de admin
+    if (req.nextUrl.pathname === '/admin/register') {
+      return res
+    }
+    
     const redirectUrl = req.nextUrl.clone()
     redirectUrl.pathname = '/login'
     redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname)
-    return NextResponse.redirect(redirectUrl)
-  }
-
-  // Se houver sessão e estiver tentando acessar páginas de auth
-  if (session && (
-    req.nextUrl.pathname === '/login' ||
-    req.nextUrl.pathname === '/admin/register'
-  )) {
-    const redirectUrl = req.nextUrl.clone()
-    redirectUrl.pathname = '/admin/dashboard'
     return NextResponse.redirect(redirectUrl)
   }
 

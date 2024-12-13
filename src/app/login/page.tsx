@@ -15,36 +15,53 @@ export default function Login() {
     setLoading(true)
     setError(null)
 
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-
     try {
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      const formData = new FormData(e.currentTarget)
+      const email = formData.get('email') as string
+      const password = formData.get('password') as string
+
+      console.log('Tentando fazer login...', { email })
+
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      if (signInError) throw signInError
+      if (signInError) {
+        console.error('Erro no login:', signInError)
+        throw signInError
+      }
 
-      if (!data.user) throw new Error('Usuário não encontrado')
+      if (!signInData.user) {
+        console.error('Usuário não encontrado após login')
+        throw new Error('Usuário não encontrado')
+      }
+
+      console.log('Login bem sucedido, buscando perfil do usuário...')
 
       // Verificar se o usuário existe na tabela usuarios e está ativo
       const { data: userData, error: userError } = await supabase
         .from('usuarios')
         .select('*')
-        .eq('id', data.user.id)
+        .eq('id', signInData.user.id)
         .single()
 
-      if (userError) throw userError
+      if (userError) {
+        console.error('Erro ao buscar usuário:', userError)
+        throw userError
+      }
 
       if (!userData) {
+        console.error('Perfil de usuário não encontrado')
         throw new Error('Perfil de usuário não encontrado')
       }
 
       if (userData.status !== 'ativo') {
+        console.error('Usuário inativo')
         throw new Error('Usuário inativo. Entre em contato com o administrador.')
       }
+
+      console.log('Perfil encontrado, redirecionando...', { tipo: userData.tipo })
 
       // Redirecionar baseado no tipo de usuário
       switch (userData.tipo) {
@@ -58,8 +75,16 @@ export default function Login() {
           router.push('/dashboard')
       }
     } catch (err) {
-      console.error('Erro ao fazer login:', err)
-      setError(err instanceof Error ? err.message : 'Erro ao fazer login')
+      console.error('Erro completo:', err)
+      if (err instanceof Error) {
+        if (err.message.includes('Invalid login credentials')) {
+          setError('Email ou senha incorretos')
+        } else {
+          setError(err.message)
+        }
+      } else {
+        setError('Erro ao fazer login')
+      }
     } finally {
       setLoading(false)
     }

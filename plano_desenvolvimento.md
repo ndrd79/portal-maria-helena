@@ -8,12 +8,12 @@
   - [x] Configurar Supabase
   - [x] Setup do TypeScript
   - [x] Configurar ambiente de desenvolvimento
-  - [ ] Deploy inicial na Vercel
+  - [x] Deploy inicial na Vercel
 
-- [  ] **Autenticação**
-  - [  ] Sistema de login/registro
-  - [  ] Perfis de usuário
-  - [  ] Níveis de acesso
+- [x] **Autenticação**
+  - [x] Sistema de login/registro
+  - [x] Perfis de usuário
+  - [x] Níveis de acesso
 
 - [  ] **Layout Base**
   - [  ] Header/Footer
