@@ -18,9 +18,17 @@ export default function Login() {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      console.log('Iniciando login...')
+      console.log('Iniciando processo de login...')
+      console.log('Email:', email)
+      console.log('Senha disponível:', !!password)
+
+      // Verificar se os campos estão preenchidos
+      if (!email || !password) {
+        throw new Error('Por favor, preencha todos os campos')
+      }
 
       // Tentar fazer login
+      console.log('Chamando Supabase auth.signInWithPassword...')
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -36,9 +44,12 @@ export default function Login() {
         throw new Error('Usuário não encontrado')
       }
 
-      console.log('Login bem sucedido, redirecionando...')
+      console.log('Login bem sucedido!')
+      console.log('Usuário:', data.user)
+      console.log('Sessão:', data.session)
       
       // Redirecionar para a página de redirecionamento
+      console.log('Redirecionando para /auth/redirect...')
       window.location.href = '/auth/redirect'
 
     } catch (err) {
