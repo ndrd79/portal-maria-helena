@@ -33,23 +33,57 @@ export default function TestRegister() {
 
       // Se o registro foi bem sucedido, criar entrada na tabela usuarios
       if (data.user) {
-        const { error: profileError } = await supabase
+        // Primeiro, verificar se já existe
+        const { data: existingUser, error: checkError } = await supabase
           .from('usuarios')
-          .insert([
-            {
+          .select('*')
+          .eq('email', data.user.email)
+          .single()
+
+        if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = not found
+          console.error('Erro ao verificar usuário:', checkError)
+          setMessage(message + '\nErro ao verificar usuário: ' + checkError.message)
+          return
+        }
+
+        if (existingUser) {
+          // Atualizar usuário existente
+          const { error: updateError } = await supabase
+            .from('usuarios')
+            .update({
               id: data.user.id,
-              email: data.user.email,
               nome: 'Fernando',
               tipo: 'admin',
               status: 'ativo'
-            }
-          ])
+            })
+            .eq('email', data.user.email)
 
-        if (profileError) {
-          console.error('Erro ao criar perfil:', profileError)
-          setMessage(message + '\nErro ao criar perfil: ' + profileError.message)
+          if (updateError) {
+            console.error('Erro ao atualizar perfil:', updateError)
+            setMessage(message + '\nErro ao atualizar perfil: ' + updateError.message)
+          } else {
+            setMessage(message + '\nPerfil atualizado com sucesso!')
+          }
         } else {
-          setMessage(message + '\nPerfil criado com sucesso!')
+          // Criar novo usuário
+          const { error: insertError } = await supabase
+            .from('usuarios')
+            .insert([
+              {
+                id: data.user.id,
+                email: data.user.email,
+                nome: 'Fernando',
+                tipo: 'admin',
+                status: 'ativo'
+              }
+            ])
+
+          if (insertError) {
+            console.error('Erro ao criar perfil:', insertError)
+            setMessage(message + '\nErro ao criar perfil: ' + insertError.message)
+          } else {
+            setMessage(message + '\nPerfil criado com sucesso!')
+          }
         }
       }
 
