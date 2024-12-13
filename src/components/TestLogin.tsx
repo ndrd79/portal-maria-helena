@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase'
 
 export default function TestLogin() {
   const [message, setMessage] = useState('')
@@ -9,14 +9,6 @@ export default function TestLogin() {
   const handleTest = async () => {
     try {
       setMessage('Iniciando teste...')
-
-      // Criar cliente Supabase diretamente
-      const supabase = createClient(
-        'https://mqyuspqsvcxvfqbmzhch.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xeXVzcHFzdmN4dmZxYm16aGNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQwOTE5OTMsImV4cCI6MjA0OTY2Nzk5M30.R-_esL_-qAXgyrH2TbKVVn4q8auH3egNAX_Tg-glBpE'
-      )
-
-      setMessage('Cliente Supabase criado')
 
       // Teste 1: Verificar sessão
       const { data: sessionData } = await supabase.auth.getSession()
