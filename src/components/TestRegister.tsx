@@ -14,6 +14,13 @@ export default function TestRegister() {
       const { data, error } = await supabase.auth.signUp({
         email: 'ndrd7980@gmail.com',
         password: 'admin123',
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            nome: 'Fernando',
+            tipo: 'admin'
+          }
+        }
       })
 
       if (error) {
@@ -23,7 +30,12 @@ export default function TestRegister() {
       }
 
       console.log('Registro bem sucedido:', data)
-      setMessage('Registro bem sucedido! Verifique seu email.')
+      console.log('ID do usuário:', data.user?.id)
+      console.log('Email do usuário:', data.user?.email)
+      console.log('Email confirmado?', data.user?.email_confirmed_at)
+      console.log('Último login:', data.user?.last_sign_in_at)
+      
+      setMessage('Registro bem sucedido! Verifique seu email para confirmar o cadastro.\nID: ' + data.user?.id)
 
       // Se o registro foi bem sucedido, criar entrada na tabela usuarios
       if (data.user) {
