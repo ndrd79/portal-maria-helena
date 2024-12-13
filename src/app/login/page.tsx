@@ -63,16 +63,32 @@ export default function Login() {
 
       console.log('Perfil encontrado, redirecionando...', { tipo: userData.tipo })
 
-      // Redirecionar baseado no tipo de usuário usando router.replace
-      switch (userData.tipo) {
-        case 'admin':
-          router.replace('/admin/dashboard')
-          break
-        case 'comerciante':
-          router.replace('/comerciante/dashboard')
-          break
-        default:
-          router.replace('/dashboard')
+      // Aguardar um momento para garantir que a sessão foi estabelecida
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // Tentar obter a sessão novamente para confirmar
+      const { data: { session } } = await supabase.auth.getSession()
+      console.log('Sessão confirmada:', !!session)
+
+      if (!session) {
+        throw new Error('Sessão não estabelecida após login')
+      }
+
+      // Redirecionar baseado no tipo de usuário
+      const redirectTo = userData.tipo === 'admin' 
+        ? '/admin/dashboard'
+        : userData.tipo === 'comerciante'
+          ? '/comerciante/dashboard'
+          : '/dashboard'
+
+      console.log('Redirecionando para:', redirectTo)
+      
+      // Tentar as duas formas de redirecionamento
+      try {
+        await router.replace(redirectTo)
+      } catch (routerError) {
+        console.error('Erro no router.replace, tentando window.location:', routerError)
+        window.location.href = redirectTo
       }
     } catch (err) {
       console.error('Erro completo:', err)
