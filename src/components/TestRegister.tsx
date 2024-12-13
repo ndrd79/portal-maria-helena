@@ -33,39 +33,20 @@ export default function TestRegister() {
 
       // Se o registro foi bem sucedido, criar entrada na tabela usuarios
       if (data.user) {
-        // Primeiro, verificar se já existe
-        const { data: existingUser, error: checkError } = await supabase
-          .from('usuarios')
-          .select('*')
-          .eq('email', data.user.email)
-          .single()
-
-        if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = not found
-          console.error('Erro ao verificar usuário:', checkError)
-          setMessage(message + '\nErro ao verificar usuário: ' + checkError.message)
-          return
-        }
-
-        if (existingUser) {
-          // Atualizar usuário existente
-          const { error: updateError } = await supabase
+        try {
+          // Primeiro, tentar deletar qualquer usuário existente com este email
+          const { error: deleteError } = await supabase
             .from('usuarios')
-            .update({
-              id: data.user.id,
-              nome: 'Fernando',
-              tipo: 'admin',
-              status: 'ativo'
-            })
+            .delete()
             .eq('email', data.user.email)
 
-          if (updateError) {
-            console.error('Erro ao atualizar perfil:', updateError)
-            setMessage(message + '\nErro ao atualizar perfil: ' + updateError.message)
+          if (deleteError) {
+            console.error('Erro ao deletar usuário existente:', deleteError)
           } else {
-            setMessage(message + '\nPerfil atualizado com sucesso!')
+            console.log('Usuário existente deletado ou não encontrado')
           }
-        } else {
-          // Criar novo usuário
+
+          // Agora criar o novo usuário
           const { error: insertError } = await supabase
             .from('usuarios')
             .insert([
@@ -84,6 +65,9 @@ export default function TestRegister() {
           } else {
             setMessage(message + '\nPerfil criado com sucesso!')
           }
+        } catch (err) {
+          console.error('Erro ao manipular perfil:', err)
+          setMessage(message + '\nErro ao manipular perfil: ' + (err instanceof Error ? err.message : 'Erro desconhecido'))
         }
       }
 
