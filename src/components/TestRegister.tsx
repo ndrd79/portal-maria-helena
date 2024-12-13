@@ -19,7 +19,9 @@ export default function TestRegister() {
           data: {
             nome: 'Fernando',
             tipo: 'admin'
-          }
+          },
+          // Desabilitar confirmação de email para testes
+          emailConfirmationForced: false
         }
       })
 
@@ -35,7 +37,7 @@ export default function TestRegister() {
       console.log('Email confirmado?', data.user?.email_confirmed_at)
       console.log('Último login:', data.user?.last_sign_in_at)
       
-      setMessage('Registro bem sucedido! Verifique seu email para confirmar o cadastro.\nID: ' + data.user?.id)
+      setMessage('Registro bem sucedido! ID: ' + data.user?.id)
 
       // Se o registro foi bem sucedido, criar entrada na tabela usuarios
       if (data.user) {
@@ -70,6 +72,21 @@ export default function TestRegister() {
             setMessage(message + '\nErro ao criar perfil: ' + insertError.message)
           } else {
             setMessage(message + '\nPerfil criado com sucesso!')
+
+            // Tentar fazer login automaticamente
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+              email: 'ndrd7980@gmail.com',
+              password: 'admin123',
+            })
+
+            if (signInError) {
+              console.error('Erro ao fazer login automático:', signInError)
+              setMessage(message + '\nErro ao fazer login automático: ' + signInError.message)
+            } else {
+              setMessage(message + '\nLogin realizado com sucesso!')
+              // Redirecionar para a página inicial
+              window.location.href = '/'
+            }
           }
         } catch (err) {
           console.error('Erro ao manipular perfil:', err)
