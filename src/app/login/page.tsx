@@ -18,23 +18,76 @@ export default function Login() {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      console.log('Tentando fazer login...')
+      console.log('Iniciando login...')
+      console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
 
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      // Verificar se já existe uma sessão
+      const { data: { session: currentSession } } = await supabase.auth.getSession()
+      if (currentSession) {
+        console.log('Já existe uma sessão, fazendo logout primeiro...')
+        await supabase.auth.signOut()
+      }
+
+      // Tentar fazer login
+      console.log('Tentando fazer login...')
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
       if (signInError) {
+        console.error('Erro no login:', signInError)
         throw signInError
       }
 
-      // Redirecionar para a página de redirecionamento
-      window.location.href = '/auth/redirect'
+      if (!data.user) {
+        console.error('Login bem sucedido mas usuário não encontrado')
+        throw new Error('Usuário não encontrado')
+      }
+
+      console.log('Login bem sucedido, verificando tipo do usuário...')
+
+      // Verificar tipo do usuário
+      const { data: userData, error: userError } = await supabase
+        .from('usuarios')
+        .select('tipo')
+        .eq('id', data.user.id)
+        .single()
+
+      if (userError) {
+        console.error('Erro ao buscar tipo do usuário:', userError)
+        throw userError
+      }
+
+      if (!userData) {
+        console.error('Usuário não encontrado na tabela usuarios')
+        throw new Error('Perfil não encontrado')
+      }
+
+      console.log('Tipo do usuário:', userData.tipo)
+
+      // Redirecionar baseado no tipo
+      const baseUrl = window.location.origin
+      const redirectTo = userData.tipo === 'admin' 
+        ? '/admin/dashboard'
+        : userData.tipo === 'comerciante'
+          ? '/comerciante/dashboard'
+          : '/dashboard'
+
+      console.log('Redirecionando para:', baseUrl + redirectTo)
+      window.location.href = baseUrl + redirectTo
 
     } catch (err) {
-      console.error('Erro:', err)
-      setError(err instanceof Error ? err.message : 'Erro ao fazer login')
+      console.error('Erro completo:', err)
+      if (err instanceof Error) {
+        if (err.message.includes('Invalid login credentials')) {
+          setError('Email ou senha incorretos')
+        } else {
+          setError(err.message)
+        }
+      } else {
+        setError('Erro ao fazer login')
+      }
     } finally {
       setLoading(false)
     }
