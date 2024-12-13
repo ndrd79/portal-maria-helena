@@ -1,29 +1,59 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Alert } from '@/components/Alert'
-
-function TestButton() {
-  return (
-    <button
-      onClick={() => {
-        console.log('Teste de clique')
-        alert('Botão de teste clicado!')
-      }}
-      className="mb-4 px-4 py-2 bg-red-500 text-white rounded"
-    >
-      Botão de Teste
-    </button>
-  )
-}
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [sessionInfo, setSessionInfo] = useState<string>('')
+
+  useEffect(() => {
+    // Verificar sessão ao carregar
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setSessionInfo(session ? 'Sessão ativa' : 'Sem sessão')
+      console.log('Estado da sessão:', session)
+    }
+
+    checkSession()
+  }, [])
+
+  const handleTestSupabase = async () => {
+    try {
+      alert('Testando Supabase...')
+      console.log('Iniciando teste do Supabase')
+
+      // Teste 1: Verificar sessão atual
+      console.log('Teste 1: Verificando sessão...')
+      const { data: { session } } = await supabase.auth.getSession()
+      console.log('Sessão atual:', session)
+
+      // Teste 2: Tentar fazer signOut se houver sessão
+      if (session) {
+        console.log('Teste 2: Fazendo signOut...')
+        await supabase.auth.signOut()
+        console.log('SignOut realizado')
+      }
+
+      // Teste 3: Tentar fazer login com credenciais de teste
+      console.log('Teste 3: Tentando login...')
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: 'teste@teste.com',
+        password: 'senha123',
+      })
+
+      console.log('Resultado do login:', { data, error })
+      alert('Teste concluído! Verifique o console.')
+
+    } catch (err) {
+      console.error('Erro no teste:', err)
+      alert('Erro no teste! Verifique o console.')
+    }
+  }
 
   const handleLogin = async () => {
-    alert('Botão de login clicado!')
     console.log('Botão clicado - Iniciando login...')
     setLoading(true)
     setError(null)
@@ -98,8 +128,17 @@ export default function Login() {
             <div className="divide-y divide-gray-200">
               <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                 <h1 className="text-2xl font-bold mb-8 text-center">Login</h1>
+
+                <div className="bg-gray-100 p-4 rounded-md mb-4">
+                  <p className="text-sm">Status: {sessionInfo}</p>
+                </div>
                 
-                <TestButton />
+                <button
+                  onClick={handleTestSupabase}
+                  className="mb-4 px-4 py-2 bg-yellow-500 text-white rounded w-full"
+                >
+                  Testar Conexão Supabase
+                </button>
                 
                 {error && <Alert type="error" message={error} />}
 
