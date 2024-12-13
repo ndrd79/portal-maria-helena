@@ -83,13 +83,8 @@ export default function Login() {
 
       console.log('Redirecionando para:', redirectTo)
       
-      // Tentar as duas formas de redirecionamento
-      try {
-        await router.replace(redirectTo)
-      } catch (routerError) {
-        console.error('Erro no router.replace, tentando window.location:', routerError)
-        window.location.href = redirectTo
-      }
+      // Usar window.location.replace diretamente
+      window.location.replace(redirectTo)
     } catch (err) {
       console.error('Erro completo:', err)
       if (err instanceof Error) {
