@@ -3,11 +3,12 @@
 ## Cronograma de Desenvolvimento
 
 ### Fase 1: Fundação (2-3 semanas)
-- [  ] **Setup Inicial**
-  - [  ] Configurar Next.js
-  - [  ] Configurar Supabase
-  - [  ] Setup do TypeScript
-  - [  ] Configurar ambiente de desenvolvimento
+- [x] **Setup Inicial**
+  - [x] Configurar Next.js
+  - [x] Configurar Supabase
+  - [x] Setup do TypeScript
+  - [x] Configurar ambiente de desenvolvimento
+  - [ ] Deploy inicial na Vercel
 
 - [  ] **Autenticação**
   - [  ] Sistema de login/registro

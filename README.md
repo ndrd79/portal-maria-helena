@@ -107,6 +107,10 @@ cp .env.example .env.local
 npm run dev
 ```
 
+## Restaurando Checkpoints
+
+Para garantir a estabilidade do desenvolvimento, mantemos checkpoints do projeto. Veja [CHECKPOINTS.md](CHECKPOINTS.md) para instruções de como restaurar o projeto para um estado anterior conhecido e estável.
+
 ## Estrutura do Projeto
 ```
 portal-maria-helena/
