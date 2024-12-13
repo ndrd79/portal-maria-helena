@@ -1,14 +1,31 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Alert } from '@/components/Alert'
 
 export default function Login() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Verificar se já está logado
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          console.log('Já existe uma sessão ativa, redirecionando...')
+          window.location.replace('/admin/dashboard')
+        }
+      } catch (err) {
+        console.error('Erro ao verificar sessão:', err)
+      }
+    }
+    checkSession()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -83,8 +100,9 @@ export default function Login() {
 
       console.log('Redirecionando para:', redirectTo)
       
-      // Usar window.location.replace diretamente
-      window.location.replace(redirectTo)
+      // Forçar redirecionamento com URL completa
+      const baseUrl = window.location.origin
+      window.location.replace(`${baseUrl}${redirectTo}`)
     } catch (err) {
       console.error('Erro completo:', err)
       if (err instanceof Error) {
