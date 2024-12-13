@@ -8,15 +8,14 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleLogin = async () => {
+    console.log('Botão clicado - Iniciando login...')
     setLoading(true)
     setError(null)
 
     try {
-      const form = e.currentTarget
-      const emailInput = form.querySelector<HTMLInputElement>('input[type="email"]')
-      const passwordInput = form.querySelector<HTMLInputElement>('input[type="password"]')
+      const emailInput = document.querySelector<HTMLInputElement>('#email')
+      const passwordInput = document.querySelector<HTMLInputElement>('#password')
 
       if (!emailInput || !passwordInput) {
         console.error('Campos de formulário não encontrados')
@@ -26,7 +25,7 @@ export default function Login() {
       const email = emailInput.value
       const password = passwordInput.value
 
-      console.log('Iniciando processo de login...')
+      console.log('Dados do formulário:')
       console.log('Email:', email)
       console.log('Senha disponível:', !!password)
 
@@ -76,10 +75,6 @@ export default function Login() {
     }
   }
 
-  const handleClick = () => {
-    console.log('Botão clicado')
-  }
-
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -91,7 +86,7 @@ export default function Login() {
                 
                 {error && <Alert type="error" message={error} />}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-6">
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                       Email
@@ -119,16 +114,16 @@ export default function Login() {
                   </div>
 
                   <button
-                    type="submit"
+                    type="button"
                     disabled={loading}
-                    onClick={handleClick}
+                    onClick={handleLogin}
                     className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
                       loading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
                     {loading ? 'Entrando...' : 'Entrar'}
                   </button>
-                </form>
+                </div>
               </div>
             </div>
           </div>
