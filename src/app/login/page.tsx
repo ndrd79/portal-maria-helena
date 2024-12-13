@@ -1,21 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Alert } from '@/components/Alert'
 
 export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [envVars, setEnvVars] = useState<{[key: string]: string}>({})
-
-  useEffect(() => {
-    // Mostrar variáveis de ambiente públicas
-    setEnvVars({
-      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || 'não definido',
-      NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'não definido',
-    })
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -28,17 +19,8 @@ export default function Login() {
       const password = formData.get('password') as string
 
       console.log('Iniciando login...')
-      console.log('Variáveis de ambiente:', envVars)
-
-      // Verificar se já existe uma sessão
-      const { data: { session: currentSession } } = await supabase.auth.getSession()
-      if (currentSession) {
-        console.log('Já existe uma sessão, fazendo logout primeiro...')
-        await supabase.auth.signOut()
-      }
 
       // Tentar fazer login
-      console.log('Tentando fazer login...')
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -54,37 +36,10 @@ export default function Login() {
         throw new Error('Usuário não encontrado')
       }
 
-      console.log('Login bem sucedido, verificando tipo do usuário...')
-
-      // Verificar tipo do usuário
-      const { data: userData, error: userError } = await supabase
-        .from('usuarios')
-        .select('tipo')
-        .eq('id', data.user.id)
-        .single()
-
-      if (userError) {
-        console.error('Erro ao buscar tipo do usuário:', userError)
-        throw userError
-      }
-
-      if (!userData) {
-        console.error('Usuário não encontrado na tabela usuarios')
-        throw new Error('Perfil não encontrado')
-      }
-
-      console.log('Tipo do usuário:', userData.tipo)
-
-      // Redirecionar baseado no tipo
-      const baseUrl = window.location.origin
-      const redirectTo = userData.tipo === 'admin' 
-        ? '/admin/dashboard'
-        : userData.tipo === 'comerciante'
-          ? '/comerciante/dashboard'
-          : '/dashboard'
-
-      console.log('Redirecionando para:', baseUrl + redirectTo)
-      window.location.href = baseUrl + redirectTo
+      console.log('Login bem sucedido, redirecionando...')
+      
+      // Redirecionar para a página de redirecionamento
+      window.location.href = '/auth/redirect'
 
     } catch (err) {
       console.error('Erro completo:', err)
@@ -112,16 +67,6 @@ export default function Login() {
                 <h1 className="text-2xl font-bold mb-8 text-center">Login</h1>
                 
                 {error && <Alert type="error" message={error} />}
-
-                {/* Debug de variáveis de ambiente */}
-                <div className="bg-gray-100 p-4 rounded-md text-sm mb-4">
-                  <h2 className="font-bold mb-2">Debug:</h2>
-                  {Object.entries(envVars).map(([key, value]) => (
-                    <div key={key}>
-                      <strong>{key}:</strong> {value}
-                    </div>
-                  ))}
-                </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
