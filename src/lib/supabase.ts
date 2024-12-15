@@ -1,26 +1,22 @@
 import { createClient } from '@supabase/supabase-js'
-import { Database } from '@/types/supabase'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Supabase URL e Anon Key são necessários')
+}
 
 console.log('Inicializando Supabase...')
 console.log('URL:', supabaseUrl)
-console.log('Key disponível:', !!supabaseKey)
+console.log('Key disponível:', !!supabaseAnonKey)
 
-if (!supabaseUrl) {
-  console.error('NEXT_PUBLIC_SUPABASE_URL não está definido')
-  throw new Error('Missing env.NEXT_PUBLIC_SUPABASE_URL')
-}
-if (!supabaseKey) {
-  console.error('NEXT_PUBLIC_SUPABASE_ANON_KEY não está definido')
-  throw new Error('Missing env.NEXT_PUBLIC_SUPABASE_ANON_KEY')
-}
-
-export const supabase = createClient<Database>(supabaseUrl, supabaseKey, {
+// Configuração do cliente Supabase
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
+    autoRefreshToken: true,
+    detectSessionInUrl: false,
+    storage: typeof window !== 'undefined' ? window.localStorage : undefined
   }
 })
