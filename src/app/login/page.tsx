@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Alert } from '@/components/Alert'
@@ -10,17 +10,6 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const router = useRouter()
-
-  // Verificar se já está autenticado
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session) {
-        router.push('/dashboard')
-      }
-    }
-    checkSession()
-  }, [router])
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -53,12 +42,7 @@ export default function Login() {
       }
 
       setSuccess('Login realizado com sucesso! Redirecionando...')
-      
-      // Atualizar a sessão antes de redirecionar
-      await supabase.auth.getSession()
-      
-      // Redirecionar imediatamente
-      router.push('/dashboard')
+      router.replace('/dashboard')
 
     } catch (err) {
       console.error('Erro:', err)
