@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Alert } from '@/components/Alert'
 
@@ -8,6 +9,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -43,7 +45,7 @@ export default function Login() {
       
       // Aguardar um momento antes de redirecionar
       setTimeout(() => {
-        window.location.href = '/dashboard'
+        router.push('/dashboard')
       }, 1500)
 
     } catch (err) {
