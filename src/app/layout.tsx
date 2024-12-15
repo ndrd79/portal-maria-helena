@@ -1,14 +1,13 @@
-import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import { Inter } from 'next/font/google'
 import './globals.css'
+import Layout from '@/components/layout/Layout'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Portal Maria Helena',
-  description: 'Portal completo para cidade com recursos de comércio, notícias e interação comunitária',
+  description: 'Conectando empresas e clientes',
 }
 
 export default function RootLayout({
@@ -19,13 +18,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </div>
+        <Layout>
+          {children}
+        </Layout>
       </body>
     </html>
   )
