@@ -19,9 +19,7 @@ export default function TestRegister() {
           data: {
             nome: 'Fernando',
             tipo: 'admin'
-          },
-          // Desabilitar confirmação de email para testes
-          emailConfirmationForced: false
+          }
         }
       })
 
