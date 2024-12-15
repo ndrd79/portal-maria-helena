@@ -22,7 +22,9 @@ export default function DashboardPage() {
         const { data: { session }, error: sessionError } = await supabase.auth.getSession()
 
         if (sessionError) {
-          throw sessionError
+          console.error('Erro na sessão:', sessionError)
+          router.push('/login')
+          return
         }
 
         if (!session?.user) {
@@ -102,24 +104,13 @@ export default function DashboardPage() {
                   </dd>
                 </div>
                 <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-gray-500">Tipo de Usuário</dt>
+                  <dt className="text-sm font-medium text-gray-500">Tipo</dt>
                   <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {user.tipo || 'Não definido'}
+                    {user.tipo || 'Não informado'}
                   </dd>
                 </div>
               </dl>
             </div>
-          </div>
-          <div className="mt-6">
-            <button
-              onClick={async () => {
-                await supabase.auth.signOut()
-                router.push('/login')
-              }}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            >
-              Sair
-            </button>
           </div>
         </div>
       </div>

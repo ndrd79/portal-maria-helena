@@ -1,15 +1,25 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Alert } from '@/components/Alert'
 
 export default function Login() {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-  const router = useRouter()
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        router.replace('/dashboard')
+      }
+    }
+    checkSession()
+  }, [router])
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -17,17 +27,12 @@ export default function Login() {
     setError(null)
     setSuccess(null)
 
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
     try {
-      const formData = new FormData(e.currentTarget)
-      const email = formData.get('email') as string
-      const password = formData.get('password') as string
-
       console.log('Iniciando login...')
-
-      if (!email || !password) {
-        throw new Error('Por favor, preencha todos os campos')
-      }
-
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -37,13 +42,11 @@ export default function Login() {
         throw signInError
       }
 
-      if (!data.user) {
-        throw new Error('Usuário não encontrado')
-      }
-
+      console.log('Login bem sucedido:', data)
+      // Força uma atualização da sessão antes de redirecionar
+      await supabase.auth.getSession()
       setSuccess('Login realizado com sucesso! Redirecionando...')
       router.replace('/dashboard')
-
     } catch (err) {
       console.error('Erro:', err)
       if (err instanceof Error) {

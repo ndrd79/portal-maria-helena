@@ -48,11 +48,9 @@ export default function TestRegister() {
 
           if (deleteError) {
             console.error('Erro ao deletar usuário existente:', deleteError)
-          } else {
-            console.log('Usuário existente deletado ou não encontrado')
           }
 
-          // Agora criar o novo usuário
+          // Agora, inserir o novo usuário
           const { error: insertError } = await supabase
             .from('usuarios')
             .insert([
@@ -61,57 +59,42 @@ export default function TestRegister() {
                 email: data.user.email,
                 nome: 'Fernando',
                 tipo: 'admin',
-                status: 'ativo'
+                created_at: new Date().toISOString()
               }
             ])
 
           if (insertError) {
-            console.error('Erro ao criar perfil:', insertError)
-            setMessage(message + '\nErro ao criar perfil: ' + insertError.message)
+            console.error('Erro ao inserir na tabela usuarios:', insertError)
+            setMessage(message + '\nErro ao criar entrada na tabela usuarios: ' + insertError.message)
           } else {
-            setMessage(message + '\nPerfil criado com sucesso!')
-
-            // Tentar fazer login automaticamente
-            const { error: signInError } = await supabase.auth.signInWithPassword({
-              email: 'ndrd7980@gmail.com',
-              password: 'admin123',
-            })
-
-            if (signInError) {
-              console.error('Erro ao fazer login automático:', signInError)
-              setMessage(message + '\nErro ao fazer login automático: ' + signInError.message)
-            } else {
-              setMessage(message + '\nLogin realizado com sucesso!')
-              // Redirecionar para a página inicial
-              window.location.href = '/'
-            }
+            setMessage(message + '\nEntrada criada na tabela usuarios com sucesso!')
           }
         } catch (err) {
-          console.error('Erro ao manipular perfil:', err)
-          setMessage(message + '\nErro ao manipular perfil: ' + (err instanceof Error ? err.message : 'Erro desconhecido'))
+          console.error('Erro ao interagir com a tabela usuarios:', err)
+          setMessage(message + '\nErro ao interagir com a tabela usuarios')
         }
       }
 
     } catch (err) {
-      console.error('Erro:', err)
-      setMessage('Erro: ' + (err instanceof Error ? err.message : 'Erro desconhecido'))
+      console.error('Erro geral:', err)
+      setMessage('Erro geral no processo de registro')
     }
   }
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow">
+    <div className="p-4">
       <h2 className="text-lg font-bold mb-4">Teste de Registro</h2>
-      
-      <div className="mb-4">
-        <p className="text-sm text-gray-600 whitespace-pre-line">{message}</p>
-      </div>
-
       <button
         onClick={handleRegister}
-        className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
-        Registrar Usuário
+        Registrar Usuário de Teste
       </button>
+      {message && (
+        <pre className="mt-4 p-4 bg-gray-100 rounded whitespace-pre-wrap">
+          {message}
+        </pre>
+      )}
     </div>
   )
 }
