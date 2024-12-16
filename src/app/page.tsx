@@ -2,6 +2,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Home() {
+  // Array de empresas parceiras (exemplo)
+  const parceiros = [
+    { id: 1, nome: 'Empresa 1', logo: '/placeholder-logo.png' },
+    { id: 2, nome: 'Empresa 2', logo: '/placeholder-logo.png' },
+    { id: 3, nome: 'Empresa 3', logo: '/placeholder-logo.png' },
+    { id: 4, nome: 'Empresa 4', logo: '/placeholder-logo.png' },
+    { id: 5, nome: 'Empresa 5', logo: '/placeholder-logo.png' },
+    { id: 6, nome: 'Empresa 6', logo: '/placeholder-logo.png' },
+  ]
+
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
@@ -19,6 +29,49 @@ export default function Home() {
           >
             Acessar Portal
           </Link>
+        </div>
+      </section>
+
+      {/* Banner de Parceiros */}
+      <section className="py-12 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900">
+              Nossos Parceiros
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Empresas que confiam em nossos serviços
+            </p>
+          </div>
+          
+          {/* Grade de logos dos parceiros */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            {parceiros.map((parceiro) => (
+              <div
+                key={parceiro.id}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              >
+                <div className="relative h-24 bg-gray-50 rounded flex items-center justify-center">
+                  <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <div className="mt-2 text-center">
+                  <p className="text-sm font-medium text-gray-900">{parceiro.nome}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA para se tornar parceiro */}
+          <div className="mt-12 text-center">
+            <Link
+              href="/contato"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            >
+              Torne-se um Parceiro
+            </Link>
+          </div>
         </div>
       </section>
 
