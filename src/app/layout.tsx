@@ -18,30 +18,14 @@ const bannersLaterais = [
     id: 1,
     empresa: 'Empresa Premium',
     descricao: 'Soluções empresariais',
-    cor: 'bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200',
-    textoCor: 'text-slate-800',
+    imagem: '/banner1.jpg',
   },
   {
     id: 2,
     empresa: 'Consultoria Empresarial',
     descricao: 'Especialistas em gestão',
-    cor: 'bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200',
-    textoCor: 'text-slate-800',
+    imagem: '/banner2.jpg',
   },
-  {
-    id: 3,
-    empresa: 'Serviços Financeiros',
-    descricao: 'Soluções personalizadas',
-    cor: 'bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200',
-    textoCor: 'text-slate-800',
-  },
-  {
-    id: 4,
-    empresa: 'Assessoria Contábil',
-    descricao: 'Expertise em contabilidade',
-    cor: 'bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200',
-    textoCor: 'text-slate-800',
-  }
 ]
 
 export default function RootLayout({
@@ -55,102 +39,66 @@ export default function RootLayout({
         <div className="min-h-screen relative">
           <Navbar />
           
-          {/* Banners Laterais - Visíveis apenas em telas grandes */}
+          {/* Wide Skyscraper Banners - Desktop Only */}
           <div className="hidden xl:block">
-            {/* Banner Lateral Esquerdo */}
-            <div className="fixed left-4 top-1/2 -translate-y-1/2 z-20 w-[200px] space-y-4">
-              {bannersLaterais.slice(0, 2).map((banner) => (
-                <Link
-                  key={banner.id}
-                  href="#"
-                  className={`block h-[300px] ${banner.cor} rounded-lg hover:shadow-lg transition-all duration-300 overflow-hidden group`}
-                >
-                  <div className="p-6 h-full flex flex-col justify-between">
-                    <div>
-                      <h3 className={`font-semibold mb-2 ${banner.textoCor} group-hover:text-blue-600 transition-colors`}>
-                        {banner.empresa}
-                      </h3>
-                      <p className="text-sm text-slate-600">
-                        {banner.descricao}
-                      </p>
-                    </div>
-                    <div className="text-sm text-blue-600 group-hover:translate-x-2 transition-transform">
-                      Saiba mais →
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            {/* Left Skyscraper */}
+            <div className="fixed left-2 top-1/2 -translate-y-1/2 z-20">
+              <div className="bg-white rounded shadow-sm border border-slate-200 w-[160px] h-[600px] overflow-hidden">
+                <div className="text-[10px] text-slate-500 px-2 py-1 border-b border-slate-100">
+                  Publicidade
+                </div>
+                <div className="w-full h-[580px] bg-slate-50 flex items-center justify-center">
+                  <span className="text-slate-400 text-sm">160 x 600</span>
+                </div>
+              </div>
             </div>
 
-            {/* Banner Lateral Direito */}
-            <div className="fixed right-4 top-1/2 -translate-y-1/2 z-20 w-[200px] space-y-4">
-              {bannersLaterais.slice(2, 4).map((banner) => (
-                <Link
-                  key={banner.id}
-                  href="#"
-                  className={`block h-[300px] ${banner.cor} rounded-lg hover:shadow-lg transition-all duration-300 overflow-hidden group`}
-                >
-                  <div className="p-6 h-full flex flex-col justify-between">
-                    <div>
-                      <h3 className={`font-semibold mb-2 ${banner.textoCor} group-hover:text-blue-600 transition-colors`}>
-                        {banner.empresa}
-                      </h3>
-                      <p className="text-sm text-slate-600">
-                        {banner.descricao}
-                      </p>
-                    </div>
-                    <div className="text-sm text-blue-600 group-hover:translate-x-2 transition-transform">
-                      Saiba mais →
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            {/* Right Skyscraper */}
+            <div className="fixed right-2 top-1/2 -translate-y-1/2 z-20">
+              <div className="bg-white rounded shadow-sm border border-slate-200 w-[160px] h-[600px] overflow-hidden">
+                <div className="text-[10px] text-slate-500 px-2 py-1 border-b border-slate-100">
+                  Publicidade
+                </div>
+                <div className="w-full h-[580px] bg-slate-50 flex items-center justify-center">
+                  <span className="text-slate-400 text-sm">160 x 600</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Banners Horizontais - Visíveis apenas em telas médias */}
+          {/* Medium Rectangle - Tablet */}
           <div className="hidden md:block xl:hidden">
-            <div className="bg-white border-b border-slate-200">
-              <div className="max-w-7xl mx-auto px-4 py-4">
-                <div className="grid grid-cols-4 gap-4">
-                  {bannersLaterais.map((banner) => (
-                    <Link
-                      key={banner.id}
-                      href="#"
-                      className={`${banner.cor} rounded-lg p-4 hover:shadow-md transition-all duration-300 group`}
-                    >
-                      <h3 className={`font-medium text-sm ${banner.textoCor} group-hover:text-blue-600 transition-colors`}>
-                        {banner.empresa}
-                      </h3>
-                    </Link>
-                  ))}
+            <div className="sticky top-0 z-20 bg-white border-b border-slate-100">
+              <div className="max-w-7xl mx-auto px-4 py-2 flex justify-center">
+                <div className="bg-white rounded shadow-sm border border-slate-200 w-[300px] h-[250px] overflow-hidden">
+                  <div className="text-[10px] text-slate-500 px-2 py-1 border-b border-slate-100">
+                    Publicidade
+                  </div>
+                  <div className="w-full h-[230px] bg-slate-50 flex items-center justify-center">
+                    <span className="text-slate-400 text-sm">300 x 250</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Banners Mobile - Visíveis apenas em telas pequenas */}
+          {/* Small Banner - Mobile */}
           <div className="block md:hidden">
-            <div className="bg-white border-b border-slate-200">
-              <div className="px-4 py-3">
-                <div className="grid grid-cols-2 gap-3">
-                  {bannersLaterais.map((banner) => (
-                    <Link
-                      key={banner.id}
-                      href="#"
-                      className={`${banner.cor} rounded-lg p-3 hover:shadow-md transition-all duration-300 group`}
-                    >
-                      <h3 className={`font-medium text-xs ${banner.textoCor} group-hover:text-blue-600 transition-colors`}>
-                        {banner.empresa}
-                      </h3>
-                    </Link>
-                  ))}
+            <div className="sticky top-0 z-20 bg-white border-b border-slate-100">
+              <div className="px-4 py-2">
+                <div className="bg-white rounded shadow-sm border border-slate-200 h-[100px] overflow-hidden">
+                  <div className="text-[10px] text-slate-500 px-2 py-1 border-b border-slate-100">
+                    Publicidade
+                  </div>
+                  <div className="w-full h-[80px] bg-slate-50 flex items-center justify-center">
+                    <span className="text-slate-400 text-sm">320 x 100</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="max-w-7xl mx-auto px-4 xl:px-[220px]">
+          <div className="max-w-7xl mx-auto px-4 xl:px-[180px]">
             {children}
           </div>
 
