@@ -283,6 +283,137 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Seção Agro & Feira Local */}
+      <section className="py-16 bg-gradient-to-b from-green-50 to-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Agronegócio */}
+            <div>
+              <div className="flex items-center space-x-2 mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
+                </svg>
+                <h2 className="text-3xl font-bold text-gray-900">Agronegócio</h2>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-sm border border-green-100 overflow-hidden">
+                <div className="p-6">
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    {/* Cotações */}
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <h3 className="font-semibold text-green-800 mb-2">Cotações do Dia</h3>
+                      <ul className="space-y-2 text-sm">
+                        <li className="flex justify-between">
+                          <span className="text-gray-600">Soja (saca):</span>
+                          <span className="font-medium">R$ 150,00</span>
+                        </li>
+                        <li className="flex justify-between">
+                          <span className="text-gray-600">Milho (saca):</span>
+                          <span className="font-medium">R$ 80,00</span>
+                        </li>
+                        <li className="flex justify-between">
+                          <span className="text-gray-600">Café (saca):</span>
+                          <span className="font-medium">R$ 1.200,00</span>
+                        </li>
+                      </ul>
+                    </div>
+                    {/* Clima */}
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <h3 className="font-semibold text-blue-800 mb-2">Previsão do Tempo</h3>
+                      <div className="text-center">
+                        <span className="text-3xl font-bold text-blue-600">28°</span>
+                        <p className="text-sm text-gray-600 mt-1">Parcialmente nublado</p>
+                        <p className="text-xs text-gray-500 mt-2">Chance de chuva: 30%</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Notícias do Agro */}
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-4">Últimas do Campo</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-start space-x-4">
+                        <div className="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0"></div>
+                        <div>
+                          <h4 className="font-medium text-gray-900 hover:text-green-600">
+                            <a href="#">Nova tecnologia aumenta produtividade na colheita</a>
+                          </h4>
+                          <p className="text-sm text-gray-500 mt-1">15 de Dezembro, 2023</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-4">
+                        <div className="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0"></div>
+                        <div>
+                          <h4 className="font-medium text-gray-900 hover:text-green-600">
+                            <a href="#">Produtores se preparam para safra 2024</a>
+                          </h4>
+                          <p className="text-sm text-gray-500 mt-1">14 de Dezembro, 2023</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feira Local */}
+            <div>
+              <div className="flex items-center space-x-2 mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <h2 className="text-3xl font-bold text-gray-900">Feira Local</h2>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-sm border border-yellow-100 overflow-hidden">
+                <div className="p-6">
+                  {/* Próxima Feira */}
+                  <div className="bg-yellow-50 rounded-lg p-4 mb-6">
+                    <h3 className="font-semibold text-yellow-800 mb-2">Próxima Feira</h3>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="text-gray-600">Quarta-feira, 20 de Dezembro</p>
+                        <p className="text-sm text-gray-500">Das 6h às 12h</p>
+                      </div>
+                      <div className="text-center bg-white rounded-lg px-4 py-2">
+                        <span className="block text-2xl font-bold text-yellow-600">4</span>
+                        <span className="text-xs text-gray-500">dias</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Produtos em Destaque */}
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-4">Produtos em Destaque</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                        <div className="w-full h-32 bg-gray-100 rounded-lg mb-3"></div>
+                        <h4 className="font-medium text-gray-900">Produtos Orgânicos</h4>
+                        <p className="text-sm text-gray-500">Verduras e legumes frescos</p>
+                      </div>
+                      <div className="bg-white rounded-lg p-3 border border-gray-100">
+                        <div className="w-full h-32 bg-gray-100 rounded-lg mb-3"></div>
+                        <h4 className="font-medium text-gray-900">Artesanato Local</h4>
+                        <p className="text-sm text-gray-500">Peças exclusivas</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Localização */}
+                  <div className="mt-6">
+                    <div className="flex justify-between items-center mb-3">
+                      <h3 className="font-semibold text-gray-900">Localização</h3>
+                      <a href="#" className="text-sm text-blue-600 hover:text-blue-700">Ver no mapa →</a>
+                    </div>
+                    <div className="bg-gray-100 rounded-lg h-32"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Banner de Parceiros */}
       <section className="py-12 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -462,7 +593,7 @@ export default function Home() {
                 horario: '15:00 - 17:00',
                 descricao: 'Como organizar as finanças da sua empresa para crescer com segurança.',
                 cor: 'from-purple-500 to-indigo-500',
-                icone: 'M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2M16 7a4 4 0 11-8 0 4 4 0 018 0z'
+                icone: 'M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2M16 7a4 4 0 11-8 0 4 4 0 018 0 4 4 0 104 0 4 4 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064'
               },
               {
                 titulo: 'Networking Empresarial',
