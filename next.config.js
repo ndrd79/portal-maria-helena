@@ -10,16 +10,7 @@ const nextConfig = {
         destination: '/api/:path*',
       },
     ]
-  },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/login',
-        permanent: true,
-      },
-    ]
-  },
+  }
 }
 
 module.exports = nextConfig
