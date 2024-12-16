@@ -352,6 +352,17 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Banner Agronegócio */}
+                  <div className="mt-6">
+                    <div className="text-[10px] text-slate-500 mb-1">
+                      Publicidade
+                    </div>
+                    <div className="w-full h-[200px] bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-center">
+                      <span className="text-slate-400 text-sm">300 x 200</span>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
