@@ -283,30 +283,81 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Sobre Nós */}
+      {/* Eventos em Destaque */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold mb-6 text-gray-900">
-                Sobre Nós
-              </h2>
-              <p className="text-lg text-gray-700 mb-6">
-                Com mais de 20 anos de experiência, a Maria Helena Contabilidade 
-                oferece serviços contábeis de excelência, combinando expertise 
-                técnica com atendimento personalizado.
-              </p>
-              <p className="text-lg text-gray-700">
-                Nossa missão é simplificar a gestão contábil do seu negócio, 
-                permitindo que você foque no que realmente importa: o crescimento 
-                da sua empresa.
-              </p>
-            </div>
-            <div className="bg-gray-100 h-[400px] rounded-lg flex items-center justify-center">
-              <svg className="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          <h2 className="text-4xl font-bold mb-12 text-center text-gray-900">
+            Eventos em Destaque
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                titulo: 'Workshop de Marketing Digital',
+                data: '20 Dezembro 2023',
+                horario: '19:00 - 22:00',
+                descricao: 'Aprenda as melhores estratégias para alavancar seu negócio nas redes sociais.',
+                cor: 'from-pink-500 to-rose-500',
+                icone: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
+              },
+              {
+                titulo: 'Palestra: Gestão Financeira',
+                data: '22 Dezembro 2023',
+                horario: '15:00 - 17:00',
+                descricao: 'Como organizar as finanças da sua empresa para crescer com segurança.',
+                cor: 'from-purple-500 to-indigo-500',
+                icone: 'M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2M16 7a4 4 0 11-8 0 4 4 0 018 0z'
+              },
+              {
+                titulo: 'Networking Empresarial',
+                data: '25 Dezembro 2023',
+                horario: '18:00 - 21:00',
+                descricao: 'Encontro para networking e troca de experiências entre empresários.',
+                cor: 'from-amber-500 to-orange-500',
+                icone: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'
+              }
+            ].map((evento, index) => (
+              <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div className="relative">
+                  <div className={`h-48 bg-gradient-to-r ${evento.cor} flex items-center justify-center`}>
+                    <svg className="w-16 h-16 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={evento.icone} />
+                    </svg>
+                  </div>
+                  <div className="absolute top-4 right-4 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">
+                    DESTAQUE
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center text-sm text-gray-600 mb-2">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    {evento.data}
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 text-gray-900">{evento.titulo}</h3>
+                  <p className="text-gray-600 mb-4">{evento.descricao}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-blue-600">{evento.horario}</span>
+                    <Link href={`/eventos/${index + 1}`} className="text-blue-600 hover:text-blue-800 font-medium">
+                      Saiba mais →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA para ver todos os eventos */}
+          <div className="mt-12 text-center">
+            <Link
+              href="/eventos"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            >
+              Ver Todos os Eventos
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -378,7 +429,7 @@ export default function Home() {
               >
                 <div className="bg-blue-100 h-48 flex items-center justify-center">
                   <svg className="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <div className="p-6">
