@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // Rotas que não precisam de autenticação
-const publicRoutes = ['/', '/login', '/register', '/auth/callback']
+const publicRoutes = ['/', '/login', '/register', '/auth/callback', '/servicos', '/sobre', '/contato']
 
 export async function middleware(req: NextRequest) {
   // Se for uma rota pública, permite o acesso direto
