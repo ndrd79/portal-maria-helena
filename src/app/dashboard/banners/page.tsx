@@ -76,7 +76,7 @@ export default function BannersPage() {
 
   if (loading) {
     return (
-      <div className="p-6">
+      <div className="p-6 bg-gray-50 min-h-screen">
         <div className="animate-pulse">
           <div className="h-8 bg-slate-200 rounded w-1/4 mb-6"></div>
           <div className="space-y-4">
@@ -90,7 +90,7 @@ export default function BannersPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Banners</h1>
         <Link
