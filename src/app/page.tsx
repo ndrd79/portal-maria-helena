@@ -5,14 +5,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center">
-        <Image
-          src="/images/maria-helena-hero.jpg"
-          alt="Maria Helena Escritório"
-          fill
-          className="object-cover brightness-50"
-          priority
-        />
+      <section className="relative h-[600px] flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-800">
         <div className="relative z-10 text-center text-white px-4">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Portal Maria Helena
@@ -22,7 +15,7 @@ export default function Home() {
           </p>
           <Link
             href="/login"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors"
+            className="bg-white text-blue-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg text-lg transition-colors"
           >
             Acessar Portal
           </Link>
@@ -48,13 +41,10 @@ export default function Home() {
                 da sua empresa.
               </p>
             </div>
-            <div className="relative h-[400px]">
-              <Image
-                src="/images/maria-helena-about.jpg"
-                alt="Equipe Maria Helena"
-                fill
-                className="object-cover rounded-lg"
-              />
+            <div className="bg-gray-100 h-[400px] rounded-lg flex items-center justify-center">
+              <svg className="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
             </div>
           </div>
         </div>
@@ -125,13 +115,10 @@ export default function Home() {
                 key={index}
                 className="bg-gray-50 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
               >
-                <div className="relative h-48">
-                  <Image
-                    src="/images/news-placeholder.jpg"
-                    alt={news.title}
-                    fill
-                    className="object-cover"
-                  />
+                <div className="bg-blue-100 h-48 flex items-center justify-center">
+                  <svg className="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                  </svg>
                 </div>
                 <div className="p-6">
                   <p className="text-sm text-blue-600 mb-2">{news.date}</p>
