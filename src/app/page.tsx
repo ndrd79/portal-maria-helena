@@ -83,8 +83,8 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       {/* Publicidade Superior */}
-      <div className="w-full bg-white mb-4">
-        <div className="max-w-7xl mx-auto">
+      <div className="w-full bg-white py-4">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="bg-white rounded shadow-sm border border-slate-200 h-[100px] overflow-hidden">
             <div className="text-[10px] text-slate-500 px-2 py-1 border-b border-slate-100">
               Publicidade
@@ -97,7 +97,7 @@ export default function Home() {
       </div>
 
       {/* Hero Section - Carrossel de Banners Premium */}
-      <section className="relative h-[300px]">
+      <section className="relative h-[300px] mt-2">
         {/* Banners */}
         <div className="relative h-full">
           {bannersPremium.map((banner, index) => (
