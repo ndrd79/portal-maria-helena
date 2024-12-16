@@ -3,9 +3,9 @@
 import { PrevisaoTempo as PrevisaoTempoType } from '@/types/agro'
 import { 
   SunIcon, 
-  CloudIcon, 
-  CloudRainIcon,
-  CloudLightningIcon
+  CloudIcon,
+  CloudArrowDownIcon,
+  BoltIcon
 } from '@heroicons/react/24/solid'
 
 interface PrevisaoTempoProps {
@@ -15,8 +15,8 @@ interface PrevisaoTempoProps {
 const iconesPorCondicao: Record<string, React.ComponentType<any>> = {
   ensolarado: SunIcon,
   nublado: CloudIcon,
-  chuvoso: CloudRainIcon,
-  tempestade: CloudLightningIcon,
+  chuvoso: CloudArrowDownIcon,
+  tempestade: BoltIcon,
 }
 
 export default function PrevisaoTempo({ previsao }: PrevisaoTempoProps) {
