@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { 
   NewspaperIcon, 
-  MegaphoneIcon, 
   ChartBarIcon,
   Cog6ToothIcon as CogIcon,
   HomeIcon,
@@ -16,7 +15,6 @@ const Sidebar = ({ onLogout }: { onLogout: () => void }) => {
   const menuItems = [
     { name: 'Dashboard', icon: HomeIcon, href: '/dashboard' },
     { name: 'Notícias', icon: NewspaperIcon, href: '/dashboard/noticias' },
-    { name: 'Propagandas', icon: MegaphoneIcon, href: '/dashboard/propagandas' },
     { name: 'Seção Agro', icon: ChartBarIcon, href: '/dashboard/agro' },
     { name: 'Configurações', icon: CogIcon, href: '/dashboard/configuracoes' },
   ];

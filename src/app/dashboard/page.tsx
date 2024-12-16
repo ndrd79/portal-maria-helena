@@ -6,7 +6,6 @@ import Sidebar from '@/components/dashboard/Sidebar'
 import Header from '@/components/dashboard/Header'
 import {
   NewspaperIcon,
-  MegaphoneIcon,
   ChartBarIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline'
@@ -16,7 +15,6 @@ export default function DashboardPage() {
   const [user, setUser] = useState<any>(null)
   const [stats, setStats] = useState({
     noticias: 0,
-    propagandas: 0,
     visitantes: 0,
     posts: 0,
   })
@@ -38,11 +36,9 @@ export default function DashboardPage() {
   const loadStats = async () => {
     // Carregar estatísticas do Supabase
     const { data: noticias } = await supabase.from('noticias').select('*', { count: 'exact' })
-    const { data: propagandas } = await supabase.from('propagandas').select('*', { count: 'exact' })
     
     setStats({
       noticias: noticias?.length || 0,
-      propagandas: propagandas?.length || 0,
       visitantes: 1234, // Exemplo - implementar analytics real
       posts: 56, // Exemplo - implementar contagem real
     })
@@ -66,7 +62,6 @@ export default function DashboardPage() {
 
   const statCards = [
     { name: 'Notícias', value: stats.noticias, icon: NewspaperIcon, color: 'bg-blue-500' },
-    { name: 'Propagandas', value: stats.propagandas, icon: MegaphoneIcon, color: 'bg-green-500' },
     { name: 'Visitantes', value: stats.visitantes, icon: UsersIcon, color: 'bg-purple-500' },
     { name: 'Posts', value: stats.posts, icon: ChartBarIcon, color: 'bg-yellow-500' },
   ]
@@ -80,7 +75,7 @@ export default function DashboardPage() {
         
         <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           {/* Cards de Estatísticas */}
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {statCards.map((card) => (
               <div
                 key={card.name}
