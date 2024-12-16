@@ -2,25 +2,21 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Rotas que precisam de autenticação
-const protectedRoutes = ['/empresas', '/admin']
-
 export async function middleware(req: NextRequest) {
-  // Se não for uma rota protegida, permite o acesso direto
-  if (!protectedRoutes.some(route => req.nextUrl.pathname.startsWith(route))) {
-    return NextResponse.next()
+  // Apenas protege a rota /empresas
+  if (req.nextUrl.pathname.startsWith('/empresas')) {
+    const res = NextResponse.next()
+    const supabase = createMiddlewareClient({ req, res })
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (!session) {
+      return NextResponse.redirect(new URL('/login', req.url))
+    }
+
+    return res
   }
 
-  const res = NextResponse.next()
-  const supabase = createMiddlewareClient({ req, res })
-  const { data: { session } } = await supabase.auth.getSession()
-
-  // Se for uma rota protegida e não estiver autenticado, redireciona para login
-  if (!session) {
-    return NextResponse.redirect(new URL('/login', req.url))
-  }
-
-  return res
+  return NextResponse.next()
 }
 
 export const config = {
