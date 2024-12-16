@@ -40,6 +40,34 @@ export default function Home() {
     }
   ]
 
+  // Array de banners laterais
+  const bannersLaterais = [
+    {
+      id: 1,
+      titulo: 'Anúncio 1',
+      cor: 'from-blue-400 to-blue-600',
+      link: '/anuncio-1'
+    },
+    {
+      id: 2,
+      titulo: 'Anúncio 2',
+      cor: 'from-purple-400 to-purple-600',
+      link: '/anuncio-2'
+    },
+    {
+      id: 3,
+      titulo: 'Anúncio 3',
+      cor: 'from-green-400 to-green-600',
+      link: '/anuncio-3'
+    },
+    {
+      id: 4,
+      titulo: 'Anúncio 4',
+      cor: 'from-red-400 to-red-600',
+      link: '/anuncio-4'
+    }
+  ]
+
   // Estado para controlar o banner ativo
   const [bannerAtivo, setBannerAtivo] = useState(0)
 
