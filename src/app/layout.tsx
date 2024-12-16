@@ -8,8 +8,46 @@ import Footer from '@/components/navigation/footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Portal Maria Helena',
-  description: 'Portal de serviços contábeis',
+  title: 'Portal Maria Helena - Notícias, Agronegócio e Serviços',
+  description: 'O principal portal de notícias de Maria Helena-PR. Encontre informações sobre agronegócio, feira local, cotações, previsão do tempo e muito mais.',
+  keywords: 'Maria Helena, Paraná, notícias, agronegócio, feira local, cotações, previsão do tempo',
+  authors: [{ name: 'Portal Maria Helena' }],
+  creator: 'Portal Maria Helena',
+  publisher: 'Portal Maria Helena',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: 'Portal Maria Helena - Notícias, Agronegócio e Serviços',
+    description: 'O principal portal de notícias de Maria Helena-PR. Encontre informações sobre agronegócio, feira local, cotações, previsão do tempo e muito mais.',
+    url: 'https://portalmariahena.com.br',
+    siteName: 'Portal Maria Helena',
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Portal Maria Helena - Notícias, Agronegócio e Serviços',
+    description: 'O principal portal de notícias de Maria Helena-PR. Encontre informações sobre agronegócio, feira local, cotações, previsão do tempo e muito mais.',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 // Array de banners laterais
