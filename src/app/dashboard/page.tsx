@@ -6,7 +6,7 @@ import Sidebar from '@/components/dashboard/Sidebar'
 import Header from '@/components/dashboard/Header'
 import {
   NewspaperIcon,
-  SpeakerphoneIcon,
+  MegaphoneIcon,
   ChartBarIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline'
@@ -66,7 +66,7 @@ export default function DashboardPage() {
 
   const statCards = [
     { name: 'Notícias', value: stats.noticias, icon: NewspaperIcon, color: 'bg-blue-500' },
-    { name: 'Propagandas', value: stats.propagandas, icon: SpeakerphoneIcon, color: 'bg-green-500' },
+    { name: 'Propagandas', value: stats.propagandas, icon: MegaphoneIcon, color: 'bg-green-500' },
     { name: 'Visitantes', value: stats.visitantes, icon: UsersIcon, color: 'bg-purple-500' },
     { name: 'Posts', value: stats.posts, icon: ChartBarIcon, color: 'bg-yellow-500' },
   ]
