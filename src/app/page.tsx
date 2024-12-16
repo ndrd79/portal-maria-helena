@@ -168,6 +168,109 @@ export default function Home() {
         </button>
       </section>
 
+      {/* Seção de Notícias */}
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Últimas Notícias</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Notícia Principal */}
+            <div className="col-span-1 md:col-span-2 lg:col-span-2">
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div className="aspect-[16/9] bg-slate-100"></div>
+                <div className="p-6">
+                  <span className="inline-block px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded-full mb-4">
+                    Destaque
+                  </span>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                    Mudanças importantes na legislação tributária para 2024
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Novas regras fiscais entram em vigor no próximo ano. Saiba como sua empresa será afetada e quais medidas tomar para se adequar às mudanças.
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">12 de Dezembro, 2023</span>
+                    <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+                      Ler mais →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Notícias Secundárias */}
+            <div className="space-y-8">
+              {/* Notícia 2 */}
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div className="aspect-[16/9] bg-slate-100"></div>
+                <div className="p-4">
+                  <span className="inline-block px-2 py-1 text-xs font-medium text-green-600 bg-green-50 rounded-full mb-3">
+                    Economia
+                  </span>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                    Como se preparar para a declaração do IR 2024
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Dicas práticas para organizar seus documentos e evitar problemas com a Receita Federal.
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-500">10 de Dezembro, 2023</span>
+                    <a href="#" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                      Ler mais →
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notícia 3 */}
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div className="aspect-[16/9] bg-slate-100"></div>
+                <div className="p-4">
+                  <span className="inline-block px-2 py-1 text-xs font-medium text-purple-600 bg-purple-50 rounded-full mb-3">
+                    MEI
+                  </span>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                    Novos limites para MEI são aprovados
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Congresso aprova aumento do teto de faturamento para Microempreendedores Individuais.
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-500">8 de Dezembro, 2023</span>
+                    <a href="#" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                      Ler mais →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Lista de Notícias Recentes */}
+          <div className="mt-12 border-t border-slate-200 pt-8">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-900">Notícias Recentes</h3>
+              <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+                Ver todas →
+              </a>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="flex items-start space-x-4">
+                  <div className="w-20 h-20 bg-slate-100 rounded-lg flex-shrink-0"></div>
+                  <div>
+                    <span className="text-sm text-gray-500">5 de Dezembro, 2023</span>
+                    <h4 className="text-base font-medium text-gray-900 mt-1 hover:text-blue-600">
+                      <a href="#">Principais tendências contábeis para 2024</a>
+                    </h4>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Banner de Parceiros */}
       <section className="py-12 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
