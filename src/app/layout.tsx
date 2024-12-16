@@ -16,27 +16,31 @@ export const metadata: Metadata = {
 const bannersLaterais = [
   {
     id: 1,
-    titulo: 'Anúncio 1',
-    cor: 'from-blue-400 to-blue-600',
-    link: '/anuncio-1'
+    empresa: 'Empresa Premium',
+    descricao: 'Soluções empresariais',
+    cor: 'bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200',
+    textoCor: 'text-slate-800',
   },
   {
     id: 2,
-    titulo: 'Anúncio 2',
-    cor: 'from-purple-400 to-purple-600',
-    link: '/anuncio-2'
+    empresa: 'Consultoria Empresarial',
+    descricao: 'Especialistas em gestão',
+    cor: 'bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200',
+    textoCor: 'text-slate-800',
   },
   {
     id: 3,
-    titulo: 'Anúncio 3',
-    cor: 'from-green-400 to-green-600',
-    link: '/anuncio-3'
+    empresa: 'Serviços Financeiros',
+    descricao: 'Soluções personalizadas',
+    cor: 'bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200',
+    textoCor: 'text-slate-800',
   },
   {
     id: 4,
-    titulo: 'Anúncio 4',
-    cor: 'from-red-400 to-red-600',
-    link: '/anuncio-4'
+    empresa: 'Assessoria Contábil',
+    descricao: 'Expertise em contabilidade',
+    cor: 'bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200',
+    textoCor: 'text-slate-800',
   }
 ]
 
@@ -50,34 +54,55 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="min-h-screen relative">
           <Navbar />
+          
           {/* Banners Laterais - Visíveis apenas em telas grandes */}
           <div className="hidden xl:block">
             {/* Banner Lateral Esquerdo */}
-            <div className="fixed left-0 top-1/2 -translate-y-1/2 z-20 w-[160px] space-y-4">
+            <div className="fixed left-4 top-1/2 -translate-y-1/2 z-20 w-[200px] space-y-4">
               {bannersLaterais.slice(0, 2).map((banner) => (
                 <Link
                   key={banner.id}
-                  href={banner.link}
-                  className={`block h-[600px] bg-gradient-to-b ${banner.cor} rounded-r-lg shadow-lg hover:shadow-xl transition-shadow p-4 text-white`}
+                  href="#"
+                  className={`block h-[300px] ${banner.cor} rounded-lg hover:shadow-lg transition-all duration-300 overflow-hidden group`}
                 >
-                  <span className="writing-mode-vertical-lr transform rotate-180 text-sm font-medium">
-                    {banner.titulo}
-                  </span>
+                  <div className="p-6 h-full flex flex-col justify-between">
+                    <div>
+                      <h3 className={`font-semibold mb-2 ${banner.textoCor} group-hover:text-blue-600 transition-colors`}>
+                        {banner.empresa}
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        {banner.descricao}
+                      </p>
+                    </div>
+                    <div className="text-sm text-blue-600 group-hover:translate-x-2 transition-transform">
+                      Saiba mais →
+                    </div>
+                  </div>
                 </Link>
               ))}
             </div>
 
             {/* Banner Lateral Direito */}
-            <div className="fixed right-0 top-1/2 -translate-y-1/2 z-20 w-[160px] space-y-4">
+            <div className="fixed right-4 top-1/2 -translate-y-1/2 z-20 w-[200px] space-y-4">
               {bannersLaterais.slice(2, 4).map((banner) => (
                 <Link
                   key={banner.id}
-                  href={banner.link}
-                  className={`block h-[600px] bg-gradient-to-b ${banner.cor} rounded-l-lg shadow-lg hover:shadow-xl transition-shadow p-4 text-white`}
+                  href="#"
+                  className={`block h-[300px] ${banner.cor} rounded-lg hover:shadow-lg transition-all duration-300 overflow-hidden group`}
                 >
-                  <span className="writing-mode-vertical-lr transform rotate-180 text-sm font-medium">
-                    {banner.titulo}
-                  </span>
+                  <div className="p-6 h-full flex flex-col justify-between">
+                    <div>
+                      <h3 className={`font-semibold mb-2 ${banner.textoCor} group-hover:text-blue-600 transition-colors`}>
+                        {banner.empresa}
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        {banner.descricao}
+                      </p>
+                    </div>
+                    <div className="text-sm text-blue-600 group-hover:translate-x-2 transition-transform">
+                      Saiba mais →
+                    </div>
+                  </div>
                 </Link>
               ))}
             </div>
@@ -85,16 +110,18 @@ export default function RootLayout({
 
           {/* Banners Horizontais - Visíveis apenas em telas médias */}
           <div className="hidden md:block xl:hidden">
-            <div className="sticky top-0 z-20 w-full bg-white shadow-md">
-              <div className="max-w-7xl mx-auto px-4 py-2">
+            <div className="bg-white border-b border-slate-200">
+              <div className="max-w-7xl mx-auto px-4 py-4">
                 <div className="grid grid-cols-4 gap-4">
                   {bannersLaterais.map((banner) => (
                     <Link
                       key={banner.id}
-                      href={banner.link}
-                      className={`block h-20 bg-gradient-to-r ${banner.cor} rounded-lg shadow hover:shadow-lg transition-shadow p-2 text-white flex items-center justify-center text-center`}
+                      href="#"
+                      className={`${banner.cor} rounded-lg p-4 hover:shadow-md transition-all duration-300 group`}
                     >
-                      <span className="text-sm font-medium">{banner.titulo}</span>
+                      <h3 className={`font-medium text-sm ${banner.textoCor} group-hover:text-blue-600 transition-colors`}>
+                        {banner.empresa}
+                      </h3>
                     </Link>
                   ))}
                 </div>
@@ -104,16 +131,18 @@ export default function RootLayout({
 
           {/* Banners Mobile - Visíveis apenas em telas pequenas */}
           <div className="block md:hidden">
-            <div className="sticky top-0 z-20 w-full bg-white shadow-md">
-              <div className="px-4 py-2">
-                <div className="grid grid-cols-2 gap-2">
+            <div className="bg-white border-b border-slate-200">
+              <div className="px-4 py-3">
+                <div className="grid grid-cols-2 gap-3">
                   {bannersLaterais.map((banner) => (
                     <Link
                       key={banner.id}
-                      href={banner.link}
-                      className={`block h-16 bg-gradient-to-r ${banner.cor} rounded-lg shadow hover:shadow-lg transition-shadow p-2 text-white flex items-center justify-center text-center`}
+                      href="#"
+                      className={`${banner.cor} rounded-lg p-3 hover:shadow-md transition-all duration-300 group`}
                     >
-                      <span className="text-xs font-medium">{banner.titulo}</span>
+                      <h3 className={`font-medium text-xs ${banner.textoCor} group-hover:text-blue-600 transition-colors`}>
+                        {banner.empresa}
+                      </h3>
                     </Link>
                   ))}
                 </div>
@@ -121,7 +150,7 @@ export default function RootLayout({
             </div>
           </div>
 
-          <div className="max-w-7xl mx-auto px-4 xl:px-[180px]">
+          <div className="max-w-7xl mx-auto px-4 xl:px-[220px]">
             {children}
           </div>
 
