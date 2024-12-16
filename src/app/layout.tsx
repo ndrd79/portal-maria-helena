@@ -43,24 +43,24 @@ export default function RootLayout({
           <div className="hidden xl:block">
             {/* Left Skyscraper */}
             <div className="fixed left-2 top-1/2 -translate-y-1/2 z-20">
-              <div className="bg-white rounded shadow-sm border border-slate-200 w-[160px] h-[600px] overflow-hidden">
+              <div className="bg-white rounded shadow-sm border border-slate-200 w-[120px] h-[400px] overflow-hidden">
                 <div className="text-[10px] text-slate-500 px-2 py-1 border-b border-slate-100">
                   Publicidade
                 </div>
-                <div className="w-full h-[580px] bg-slate-50 flex items-center justify-center">
-                  <span className="text-slate-400 text-sm">160 x 600</span>
+                <div className="w-full h-[380px] bg-slate-50 flex items-center justify-center">
+                  <span className="text-slate-400 text-sm">120 x 400</span>
                 </div>
               </div>
             </div>
 
             {/* Right Skyscraper */}
             <div className="fixed right-2 top-1/2 -translate-y-1/2 z-20">
-              <div className="bg-white rounded shadow-sm border border-slate-200 w-[160px] h-[600px] overflow-hidden">
+              <div className="bg-white rounded shadow-sm border border-slate-200 w-[120px] h-[400px] overflow-hidden">
                 <div className="text-[10px] text-slate-500 px-2 py-1 border-b border-slate-100">
                   Publicidade
                 </div>
-                <div className="w-full h-[580px] bg-slate-50 flex items-center justify-center">
-                  <span className="text-slate-400 text-sm">160 x 600</span>
+                <div className="w-full h-[380px] bg-slate-50 flex items-center justify-center">
+                  <span className="text-slate-400 text-sm">120 x 400</span>
                 </div>
               </div>
             </div>
@@ -98,7 +98,7 @@ export default function RootLayout({
             </div>
           </div>
 
-          <div className="max-w-7xl mx-auto px-4 xl:px-[180px]">
+          <div className="max-w-7xl mx-auto px-4 xl:px-[140px]">
             {children}
           </div>
 
