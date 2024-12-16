@@ -83,7 +83,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       {/* Hero Section - Carrossel de Banners Premium */}
-      <section className="relative h-[600px]">
+      <section className="relative h-[300px]">
         {/* Banners */}
         <div className="relative h-full">
           {bannersPremium.map((banner, index) => (
