@@ -84,7 +84,7 @@ export default function RootLayout({
 
           {/* Small Banner - Mobile */}
           <div className="block md:hidden">
-            <div className="sticky top-0 z-20 bg-white border-b border-slate-100">
+            <div className="sticky top-[64px] z-20 bg-white border-b border-slate-100">
               <div className="px-4 py-2">
                 <div className="bg-white rounded shadow-sm border border-slate-200 h-[100px] overflow-hidden">
                   <div className="text-[10px] text-slate-500 px-2 py-1 border-b border-slate-100">

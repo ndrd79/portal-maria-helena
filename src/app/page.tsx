@@ -82,6 +82,20 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
+      {/* Publicidade Superior */}
+      <div className="w-full bg-white mb-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white rounded shadow-sm border border-slate-200 h-[100px] overflow-hidden">
+            <div className="text-[10px] text-slate-500 px-2 py-1 border-b border-slate-100">
+              Publicidade
+            </div>
+            <div className="w-full h-[80px] bg-slate-50 flex items-center justify-center">
+              <span className="text-slate-400 text-sm">320 x 100</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section - Carrossel de Banners Premium */}
       <section className="relative h-[300px]">
         {/* Banners */}
