@@ -75,6 +75,120 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Banners Premium */}
+      <section className="py-8 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Banner Premium 1 */}
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white hover:shadow-xl transition-shadow">
+              <h3 className="text-xl font-bold mb-2">Destaque Premium</h3>
+              <p className="text-sm mb-4">Espaço reservado para anunciantes premium</p>
+              <div className="h-40 bg-white/10 rounded flex items-center justify-center">
+                <span className="text-white/60">Banner 728x90</span>
+              </div>
+            </div>
+            {/* Banner Premium 2 */}
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white hover:shadow-xl transition-shadow">
+              <h3 className="text-xl font-bold mb-2">Destaque Premium</h3>
+              <p className="text-sm mb-4">Espaço reservado para anunciantes premium</p>
+              <div className="h-40 bg-white/10 rounded flex items-center justify-center">
+                <span className="text-white/60">Banner 728x90</span>
+              </div>
+            </div>
+            {/* Banner Premium 3 */}
+            <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white hover:shadow-xl transition-shadow md:col-span-2 lg:col-span-1">
+              <h3 className="text-xl font-bold mb-2">Destaque Premium</h3>
+              <p className="text-sm mb-4">Espaço reservado para anunciantes premium</p>
+              <div className="h-40 bg-white/10 rounded flex items-center justify-center">
+                <span className="text-white/60">Banner 728x90</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Classificados */}
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900">Classificados</h2>
+            <p className="mt-4 text-lg text-gray-600">Oportunidades e anúncios selecionados</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Classificado 1 */}
+            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="h-48 bg-blue-100 relative">
+                <div className="absolute top-2 right-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">DESTAQUE</div>
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-lg mb-2">Título do Anúncio</h3>
+                <p className="text-sm text-gray-600 mb-2">Descrição breve do anúncio ou classificado</p>
+                <div className="flex justify-between items-center">
+                  <span className="text-blue-600 font-bold">R$ 0,00</span>
+                  <button className="text-sm text-blue-600 hover:underline">Ver mais</button>
+                </div>
+              </div>
+            </div>
+            
+            {/* Classificado 2 */}
+            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="h-48 bg-purple-100 relative">
+                <div className="absolute top-2 right-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">DESTAQUE</div>
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-lg mb-2">Título do Anúncio</h3>
+                <p className="text-sm text-gray-600 mb-2">Descrição breve do anúncio ou classificado</p>
+                <div className="flex justify-between items-center">
+                  <span className="text-blue-600 font-bold">R$ 0,00</span>
+                  <button className="text-sm text-blue-600 hover:underline">Ver mais</button>
+                </div>
+              </div>
+            </div>
+            
+            {/* Classificado 3 */}
+            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="h-48 bg-green-100 relative">
+                <div className="absolute top-2 right-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">DESTAQUE</div>
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-lg mb-2">Título do Anúncio</h3>
+                <p className="text-sm text-gray-600 mb-2">Descrição breve do anúncio ou classificado</p>
+                <div className="flex justify-between items-center">
+                  <span className="text-blue-600 font-bold">R$ 0,00</span>
+                  <button className="text-sm text-blue-600 hover:underline">Ver mais</button>
+                </div>
+              </div>
+            </div>
+            
+            {/* Classificado 4 */}
+            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="h-48 bg-yellow-100 relative">
+                <div className="absolute top-2 right-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">DESTAQUE</div>
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-lg mb-2">Título do Anúncio</h3>
+                <p className="text-sm text-gray-600 mb-2">Descrição breve do anúncio ou classificado</p>
+                <div className="flex justify-between items-center">
+                  <span className="text-blue-600 font-bold">R$ 0,00</span>
+                  <button className="text-sm text-blue-600 hover:underline">Ver mais</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA para anunciar */}
+          <div className="mt-12 text-center">
+            <Link
+              href="/anunciar"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            >
+              Anuncie Aqui
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Sobre Nós */}
       <section className="py-20 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
