@@ -9,7 +9,7 @@ import {
   SpeakerphoneIcon,
   ChartBarIcon,
   UsersIcon,
-} from '@heroicons/react/outline'
+} from '@heroicons/react/24/outline'
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true)

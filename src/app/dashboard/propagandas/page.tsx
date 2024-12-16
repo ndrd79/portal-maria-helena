@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Sidebar from '@/components/dashboard/Sidebar'
 import Header from '@/components/dashboard/Header'
-import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/outline'
+import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 
 export default function PropagandasPage() {
   const [user, setUser] = useState<any>(null)

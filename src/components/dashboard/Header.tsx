@@ -1,4 +1,4 @@
-import { UserIcon, BellIcon } from '@heroicons/react/outline';
+import { UserIcon, BellIcon } from '@heroicons/react/24/outline';
 
 const Header = ({ user }: { user: any }) => {
   return (

@@ -4,11 +4,11 @@ import {
   NewspaperIcon, 
   SpeakerphoneIcon, 
   ChartBarIcon,
-  CogIcon,
+  Cog6ToothIcon as CogIcon,
   HomeIcon,
   UserIcon,
-  LogoutIcon,
-} from '@heroicons/react/outline';
+  ArrowRightOnRectangleIcon as LogoutIcon,
+} from '@heroicons/react/24/outline';
 
 const Sidebar = ({ onLogout }: { onLogout: () => void }) => {
   const [activeItem, setActiveItem] = useState('dashboard');
