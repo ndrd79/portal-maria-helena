@@ -16,3 +16,10 @@ export interface Banner {
   created_at?: string
   updated_at?: string
 }
+
+export interface BannerLateral extends Banner {
+  posicao: 'esquerda' | 'direita';
+  altura?: number; // altura em pixels
+  largura?: number; // largura em pixels
+  fixo?: boolean; // se o banner deve ficar fixo ao rolar a página
+}
