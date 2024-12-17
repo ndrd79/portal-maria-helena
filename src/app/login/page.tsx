@@ -29,16 +29,19 @@ export default function Login() {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      console.log('Tentando login com:', email) // Debug
+      console.log('Tentando login com:', email)
+      console.log('URL do Supabase:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+      console.log('Chave disponível:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      console.log('Resposta do Supabase:', { data, error }) // Debug
+      console.log('Resposta do Supabase:', JSON.stringify({ data, error }, null, 2))
 
       if (error) {
+        console.error('Erro detalhado:', error)
         setError(error.message)
         return
       }
@@ -49,7 +52,7 @@ export default function Login() {
         setError('Sessão não criada após login')
       }
     } catch (err) {
-      console.error('Erro no login:', err) // Debug
+      console.error('Erro no login:', err)
       setError('Erro ao fazer login')
     } finally {
       setLoading(false)
