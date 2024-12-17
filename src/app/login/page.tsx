@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export default function Login() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -17,7 +18,7 @@ export default function Login() {
       }
     }
     checkAuth()
-  }, [router])
+  }, [router, supabase])
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -29,19 +30,13 @@ export default function Login() {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      console.log('Tentando login com:', email)
-      console.log('URL do Supabase:', process.env.NEXT_PUBLIC_SUPABASE_URL)
-      console.log('Chave disponível:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
-
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      console.log('Resposta do Supabase:', JSON.stringify({ data, error }, null, 2))
-
       if (error) {
-        console.error('Erro detalhado:', error)
+        console.error('Erro no login:', error)
         setError(error.message)
         return
       }
@@ -99,11 +94,7 @@ export default function Login() {
 
           {error && (
             <div className="rounded-md bg-red-50 p-4">
-              <div className="flex">
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">{error}</h3>
-                </div>
-              </div>
+              <p className="text-sm text-red-700">{error}</p>
             </div>
           )}
 
@@ -111,11 +102,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
-                loading
-                  ? 'bg-indigo-400 cursor-not-allowed'
-                  : 'bg-indigo-600 hover:bg-indigo-700'
-              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
               {loading ? 'Entrando...' : 'Entrar'}
             </button>

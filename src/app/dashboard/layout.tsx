@@ -1,14 +1,30 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/dashboard/Sidebar'
+import { supabase } from '@/lib/supabase'
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const handleLogout = () => {
-    // Implementar lógica de logout aqui
+  const router = useRouter()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        router.replace('/login')
+      }
+    }
+    checkAuth()
+  }, [router])
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.replace('/login')
   }
 
   return (
