@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/dashboard/Sidebar'
 import Header from '@/components/dashboard/Header'
 import {
@@ -11,6 +12,7 @@ import {
 } from '@heroicons/react/24/outline'
 
 export default function DashboardPage() {
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [stats, setStats] = useState({
@@ -20,18 +22,26 @@ export default function DashboardPage() {
   })
 
   useEffect(() => {
-    const checkAuth = async () => {
+    checkUser()
+  }, [])
+
+  const checkUser = async () => {
+    try {
       const { data: { session } } = await supabase.auth.getSession()
+      
       if (!session) {
-        window.location.href = '/login'
+        router.push('/login')
         return
       }
+      
       setUser(session.user)
       await loadStats()
       setLoading(false)
+    } catch (error) {
+      console.error('Erro ao verificar usuário:', error)
+      router.push('/login')
     }
-    checkAuth()
-  }, [])
+  }
 
   const loadStats = async () => {
     // Carregar estatísticas do Supabase
