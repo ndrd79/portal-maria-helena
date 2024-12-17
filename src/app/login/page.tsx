@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 export default function Login() {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -11,11 +13,11 @@ export default function Login() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession()
       if (session) {
-        window.location.href = '/dashboard'
+        router.push('/dashboard')
       }
     }
     checkAuth()
-  }, [])
+  }, [router])
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -27,18 +29,27 @@ export default function Login() {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log('Tentando login com:', email) // Debug
+
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
+
+      console.log('Resposta do Supabase:', { data, error }) // Debug
 
       if (error) {
         setError(error.message)
         return
       }
 
-      window.location.href = '/dashboard'
+      if (data?.session) {
+        router.push('/dashboard')
+      } else {
+        setError('Sessão não criada após login')
+      }
     } catch (err) {
+      console.error('Erro no login:', err) // Debug
       setError('Erro ao fazer login')
     } finally {
       setLoading(false)
