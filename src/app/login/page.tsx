@@ -13,7 +13,7 @@ export default function Login() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession()
       if (session) {
-        router.push('/dashboard')
+        router.replace('/dashboard')
       }
     }
     checkAuth()
@@ -47,7 +47,7 @@ export default function Login() {
       }
 
       if (data?.session) {
-        router.push('/dashboard')
+        router.replace('/dashboard')
       } else {
         setError('Sessão não criada após login')
       }
