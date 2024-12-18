@@ -5,6 +5,24 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { Usuario } from '@/types/supabase'
 import { Alert } from '@/components/Alert'
+import Image from 'next/image'
+
+type Anuncio = {
+  id: string
+  titulo: string
+  descricao: string | null
+  tipo: 'banner' | 'carrossel' | 'card' | 'popup' | 'nativo'
+  imagem_url: string
+  link_url: string | null
+  data_inicio: string
+  data_fim: string
+  status: 'ativo' | 'inativo' | 'agendado'
+  posicao: string
+  prioridade: number
+  visualizacoes: number
+  cliques: number
+  created_at: string
+}
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -12,63 +30,62 @@ export default function AdminDashboard() {
   const [user, setUser] = useState<Usuario | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [anuncios, setAnuncios] = useState<Anuncio[]>([])
+  const [showAnuncios, setShowAnuncios] = useState(false)
+  const [novoAnuncio, setNovoAnuncio] = useState(false)
 
   useEffect(() => {
-    async function loadUser() {
-      try {
-        console.log('Verificando sessão...')
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-        
-        if (sessionError) {
-          console.error('Erro ao obter sessão:', sessionError)
-          throw sessionError
-        }
-
-        if (!session) {
-          console.log('Sem sessão ativa, redirecionando...')
-          router.push('/login')
-          return
-        }
-
-        console.log('Buscando dados do usuário...')
-        const { data: userData, error: userError } = await supabase
-          .from('usuarios')
-          .select('*')
-          .eq('id', session.user.id)
-          .single()
-
-        if (userError) {
-          console.error('Erro ao buscar usuário:', userError)
-          throw userError
-        }
-
-        if (!userData) {
-          console.error('Usuário não encontrado')
-          throw new Error('Usuário não encontrado')
-        }
-
-        if (userData.tipo !== 'admin') {
-          console.error('Usuário não é admin')
-          throw new Error('Acesso não autorizado')
-        }
-
-        console.log('Dados do usuário carregados:', userData)
-        setUser(userData)
-      } catch (err) {
-        console.error('Erro ao carregar usuário:', err)
-        setError(err instanceof Error ? err.message : 'Erro ao carregar usuário')
-        router.push('/login')
-      } finally {
-        setLoading(false)
-      }
-    }
-
     loadUser()
   }, [router])
 
+  async function loadUser() {
+    try {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      
+      if (sessionError) throw sessionError
+      if (!session) {
+        router.push('/login')
+        return
+      }
+
+      const { data: userData, error: userError } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('id', session.user.id)
+        .single()
+
+      if (userError) throw userError
+      if (!userData) throw new Error('Usuário não encontrado')
+      if (userData.tipo !== 'admin') throw new Error('Acesso não autorizado')
+
+      setUser(userData)
+      await loadAnuncios()
+    } catch (err) {
+      console.error('Erro ao carregar usuário:', err)
+      setError(err instanceof Error ? err.message : 'Erro ao carregar usuário')
+      router.push('/login')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function loadAnuncios() {
+    try {
+      const { data, error } = await supabase
+        .from('anuncios')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+      setAnuncios(data || [])
+    } catch (err) {
+      console.error('Erro ao carregar anúncios:', err)
+      setError(err instanceof Error ? err.message : 'Erro ao carregar anúncios')
+    }
+  }
+
   const handleLogout = async () => {
     try {
-      console.log('Fazendo logout...')
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       router.push('/login')
@@ -184,22 +201,94 @@ export default function AdminDashboard() {
               <div className="p-5">
                 <h3 className="text-lg font-medium text-gray-900">Anúncios</h3>
                 <p className="mt-1 text-sm text-gray-500">Gerenciar publicidade no portal</p>
-                <div className="mt-3 space-y-1">
-                  <p className="text-xs text-gray-500">• Banners e carrosséis</p>
-                  <p className="text-xs text-gray-500">• Anúncios em cards</p>
-                  <p className="text-xs text-gray-500">• Métricas e relatórios</p>
-                </div>
               </div>
               <div className="bg-gray-50 px-5 py-3">
                 <button 
-                  onClick={() => router.push('/admin/anuncios')}
+                  onClick={() => setShowAnuncios(!showAnuncios)}
                   className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
                 >
-                  Gerenciar →
+                  {showAnuncios ? 'Fechar' : 'Gerenciar'} →
                 </button>
               </div>
             </div>
           </div>
+
+          {showAnuncios && (
+            <div className="mt-8">
+              <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
+                  <div>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                      Gerenciamento de Anúncios
+                    </h3>
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                      Gerencie todos os anúncios e campanhas do portal
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setNovoAnuncio(true)}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+                  >
+                    Novo Anúncio
+                  </button>
+                </div>
+
+                <div className="border-t border-gray-200">
+                  <ul className="divide-y divide-gray-200">
+                    {anuncios.map((anuncio) => (
+                      <li key={anuncio.id} className="px-4 py-4 sm:px-6 hover:bg-gray-50">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-12 w-12 relative">
+                              <Image
+                                src={anuncio.imagem_url}
+                                alt={anuncio.titulo}
+                                fill
+                                className="object-cover rounded"
+                              />
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-indigo-600">
+                                {anuncio.titulo}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {anuncio.descricao}
+                              </div>
+                              <div className="mt-1 text-xs text-gray-400">
+                                {new Date(anuncio.data_inicio).toLocaleDateString()} até {new Date(anuncio.data_fim).toLocaleDateString()}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-4">
+                            <div className="text-sm text-gray-500">
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium
+                                ${anuncio.status === 'ativo' ? 'bg-green-100 text-green-800' : 
+                                  anuncio.status === 'agendado' ? 'bg-yellow-100 text-yellow-800' : 
+                                  'bg-red-100 text-red-800'}`}>
+                                {anuncio.status.charAt(0).toUpperCase() + anuncio.status.slice(1)}
+                              </span>
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              <div className="flex items-center space-x-2">
+                                <span title="Visualizações">👁️ {anuncio.visualizacoes}</span>
+                                <span title="Cliques">🖱️ {anuncio.cliques}</span>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => {/* Implementar edição */}}
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              Editar
+                            </button>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
