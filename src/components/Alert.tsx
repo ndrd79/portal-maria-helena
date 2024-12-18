@@ -1,6 +1,7 @@
 interface AlertProps {
   type: 'success' | 'error' | 'info' | 'warning'
   message: string
+  className?: string
 }
 
 const alertStyles = {
@@ -10,9 +11,9 @@ const alertStyles = {
   warning: 'bg-yellow-100 border-yellow-400 text-yellow-700',
 }
 
-export function Alert({ type, message }: AlertProps) {
+export function Alert({ type, message, className = '' }: AlertProps) {
   return (
-    <div className={`${alertStyles[type]} border px-4 py-3 rounded relative mb-4`} role="alert">
+    <div className={`${alertStyles[type]} border px-4 py-3 rounded relative ${className}`} role="alert">
       <span className="block sm:inline">{message}</span>
     </div>
   )
