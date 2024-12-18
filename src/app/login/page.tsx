@@ -46,11 +46,7 @@ export default function Login() {
 
       if (error) {
         console.error('Erro no login:', error)
-        if (error.message === 'Invalid API key') {
-          setError('Erro de configuração do servidor. Por favor, tente novamente mais tarde.')
-        } else {
-          setError(error.message)
-        }
+        setError(error.message)
         return
       }
 

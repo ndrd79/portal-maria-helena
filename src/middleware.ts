@@ -6,20 +6,17 @@ export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
 
-  await supabase.auth.getSession()
+  // Refresh session if expired - required for Server Components
+  const { data: { session } } = await supabase.auth.getSession()
 
-  // Rotas que requerem autenticação
-  const protectedRoutes = ['/dashboard', '/admin']
-  const isProtectedRoute = protectedRoutes.some(route => req.nextUrl.pathname.startsWith(route))
+  // Se não estiver na página de login e não tiver sessão, redireciona para login
+  if (!session && !req.nextUrl.pathname.startsWith('/login')) {
+    return NextResponse.redirect(new URL('/login', req.url))
+  }
 
-  if (isProtectedRoute) {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session) {
-      // Redireciona para login se tentar acessar rota protegida sem autenticação
-      const redirectUrl = new URL('/login', req.url)
-      redirectUrl.searchParams.set('redirectTo', req.nextUrl.pathname)
-      return NextResponse.redirect(redirectUrl)
-    }
+  // Se estiver na página de login e tiver sessão, redireciona para dashboard
+  if (session && req.nextUrl.pathname.startsWith('/login')) {
+    return NextResponse.redirect(new URL('/admin/dashboard', req.url))
   }
 
   return res
@@ -27,14 +24,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - images (public images)
-     * - api (API routes)
-     */
-    '/((?!_next/static|_next/image|favicon.ico|images|api).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|images|$).*)',
   ],
 }
