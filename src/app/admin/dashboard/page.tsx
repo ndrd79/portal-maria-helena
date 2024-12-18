@@ -3,26 +3,9 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { Usuario } from '@/types/supabase'
+import { Usuario, Anuncio } from '@/types/supabase'
 import { Alert } from '@/components/Alert'
 import Image from 'next/image'
-
-type Anuncio = {
-  id: string
-  titulo: string
-  descricao: string | null
-  tipo: 'banner' | 'carrossel' | 'card' | 'popup' | 'nativo'
-  imagem_url: string
-  link_url: string | null
-  data_inicio: string
-  data_fim: string
-  status: 'ativo' | 'inativo' | 'agendado'
-  posicao: string
-  prioridade: number
-  visualizacoes: number
-  cliques: number
-  created_at: string
-}
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -35,10 +18,10 @@ export default function AdminDashboard() {
   const [novoAnuncio, setNovoAnuncio] = useState(false)
 
   useEffect(() => {
-    loadUser()
+    checkUser()
   }, [])
 
-  async function loadUser() {
+  async function checkUser() {
     try {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession()
       
@@ -48,21 +31,32 @@ export default function AdminDashboard() {
         return
       }
 
-      const { data: userData, error: userError } = await supabase
+      await loadUser(session.user.id)
+    } catch (err) {
+      console.error('Erro ao verificar sessão:', err)
+      setError(err instanceof Error ? err.message : 'Erro ao verificar sessão')
+      router.push('/login')
+    }
+  }
+
+  async function loadUser(userId: string) {
+    try {
+      const { data, error } = await supabase
         .from('usuarios')
         .select('*')
-        .eq('id', session.user.id)
+        .eq('id', userId)
         .single()
 
-      if (userError) throw userError
-      if (!userData) throw new Error('Usuário não encontrado')
-      if (userData.tipo !== 'admin') throw new Error('Acesso não autorizado')
+      if (error) throw error
+      if (!data) throw new Error('Usuário não encontrado')
+      if (data.tipo !== 'admin') throw new Error('Acesso não autorizado')
 
-      setUser(userData)
+      setUser(data)
       await loadAnuncios()
     } catch (err) {
       console.error('Erro ao carregar usuário:', err)
       setError(err instanceof Error ? err.message : 'Erro ao carregar usuário')
+      router.push('/login')
     } finally {
       setLoading(false)
     }
@@ -107,6 +101,16 @@ export default function AdminDashboard() {
     )
   }
 
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 p-6">
+        <div className="max-w-7xl mx-auto">
+          <Alert type="error" message="Usuário não encontrado" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-white shadow-sm">
@@ -116,7 +120,7 @@ export default function AdminDashboard() {
               <h1 className="text-xl font-semibold">Portal Maria Helena - Admin</h1>
             </div>
             <div className="flex items-center">
-              {user && <span className="text-gray-700 mr-4">Olá, {user.nome}</span>}
+              <span className="text-gray-700 mr-4">Olá, {user.nome}</span>
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 text-sm text-red-600 hover:text-red-800"
@@ -136,7 +140,7 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <h3 className="text-lg font-medium text-gray-900">Comércios</h3>
@@ -219,58 +223,64 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="border-t border-gray-200">
-                  <ul className="divide-y divide-gray-200">
-                    {anuncios.map((anuncio) => (
-                      <li key={anuncio.id} className="px-4 py-4 sm:px-6 hover:bg-gray-50">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <div className="flex-shrink-0 h-12 w-12 relative">
-                              <Image
-                                src={anuncio.imagem_url || '/placeholder.png'}
-                                alt={anuncio.titulo}
-                                width={48}
-                                height={48}
-                                className="object-cover rounded"
-                              />
+                  {anuncios.length === 0 ? (
+                    <div className="p-4 text-center text-gray-500">
+                      Nenhum anúncio cadastrado
+                    </div>
+                  ) : (
+                    <ul className="divide-y divide-gray-200">
+                      {anuncios.map((anuncio) => (
+                        <li key={anuncio.id} className="px-4 py-4 sm:px-6 hover:bg-gray-50">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                              <div className="flex-shrink-0 h-12 w-12 relative">
+                                <Image
+                                  src={anuncio.imagem_url || '/placeholder.png'}
+                                  alt={anuncio.titulo}
+                                  width={48}
+                                  height={48}
+                                  className="object-cover rounded"
+                                />
+                              </div>
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-indigo-600">
+                                  {anuncio.titulo}
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                  {anuncio.descricao}
+                                </div>
+                                <div className="mt-1 text-xs text-gray-400">
+                                  {new Date(anuncio.data_inicio).toLocaleDateString()} até {new Date(anuncio.data_fim).toLocaleDateString()}
+                                </div>
+                              </div>
                             </div>
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-indigo-600">
-                                {anuncio.titulo}
+                            <div className="flex items-center space-x-4">
+                              <div className="text-sm text-gray-500">
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium
+                                  ${anuncio.status === 'ativo' ? 'bg-green-100 text-green-800' : 
+                                    anuncio.status === 'agendado' ? 'bg-yellow-100 text-yellow-800' : 
+                                    'bg-red-100 text-red-800'}`}>
+                                  {anuncio.status.charAt(0).toUpperCase() + anuncio.status.slice(1)}
+                                </span>
                               </div>
                               <div className="text-sm text-gray-500">
-                                {anuncio.descricao}
+                                <div className="flex items-center space-x-2">
+                                  <span title="Visualizações">👁️ {anuncio.visualizacoes}</span>
+                                  <span title="Cliques">🖱️ {anuncio.cliques}</span>
+                                </div>
                               </div>
-                              <div className="mt-1 text-xs text-gray-400">
-                                {new Date(anuncio.data_inicio).toLocaleDateString()} até {new Date(anuncio.data_fim).toLocaleDateString()}
-                              </div>
+                              <button
+                                onClick={() => {/* Implementar edição */}}
+                                className="text-indigo-600 hover:text-indigo-900"
+                              >
+                                Editar
+                              </button>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-4">
-                            <div className="text-sm text-gray-500">
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium
-                                ${anuncio.status === 'ativo' ? 'bg-green-100 text-green-800' : 
-                                  anuncio.status === 'agendado' ? 'bg-yellow-100 text-yellow-800' : 
-                                  'bg-red-100 text-red-800'}`}>
-                                {anuncio.status.charAt(0).toUpperCase() + anuncio.status.slice(1)}
-                              </span>
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              <div className="flex items-center space-x-2">
-                                <span title="Visualizações">👁️ {anuncio.visualizacoes}</span>
-                                <span title="Cliques">🖱️ {anuncio.cliques}</span>
-                              </div>
-                            </div>
-                            <button
-                              onClick={() => {/* Implementar edição */}}
-                              className="text-indigo-600 hover:text-indigo-900"
-                            >
-                              Editar
-                            </button>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
             </div>

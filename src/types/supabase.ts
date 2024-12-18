@@ -8,6 +8,8 @@ export type Json =
 
 export type UserRole = 'admin' | 'comerciante' | 'usuario'
 export type StatusType = 'ativo' | 'pendente' | 'suspenso' | 'inativo'
+export type AnuncioTipo = 'banner' | 'carrossel' | 'card' | 'popup' | 'nativo'
+export type AnuncioStatus = 'ativo' | 'inativo' | 'agendado'
 
 export interface Usuario {
   id: string
@@ -17,6 +19,25 @@ export interface Usuario {
   telefone?: string
   avatar_url?: string
   status: StatusType
+  created_at: string
+  updated_at: string
+}
+
+export interface Anuncio {
+  id: string
+  usuario_id: string
+  titulo: string
+  descricao?: string
+  tipo: AnuncioTipo
+  imagem_url: string
+  link_url?: string
+  data_inicio: string
+  data_fim: string
+  status: AnuncioStatus
+  posicao: string
+  prioridade: number
+  visualizacoes: number
+  cliques: number
   created_at: string
   updated_at: string
 }
@@ -176,6 +197,11 @@ export interface Database {
         Row: Usuario
         Insert: Partial<Usuario>
         Update: Partial<Usuario>
+      }
+      anuncios: {
+        Row: Anuncio
+        Insert: Partial<Anuncio>
+        Update: Partial<Anuncio>
       }
       categorias: {
         Row: Categoria
