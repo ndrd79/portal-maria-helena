@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Sidebar from '@/components/dashboard/Sidebar'
 import Header from '@/components/dashboard/Header'
 import {
@@ -18,6 +18,7 @@ export default function DashboardPage() {
     visitantes: 0,
     posts: 0,
   })
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
     const checkAuth = async () => {
