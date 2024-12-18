@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -9,6 +9,7 @@ export default function Header() {
   const [user, setUser] = useState<any>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
     const getUser = async () => {
