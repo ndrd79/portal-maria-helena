@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Sidebar from '@/components/dashboard/Sidebar'
 import Header from '@/components/dashboard/Header'
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
@@ -10,32 +10,40 @@ export default function PropagandasPage() {
   const [user, setUser] = useState<any>(null)
   const [propagandas, setPropagandas] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
+    const fetchPropagandas = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('propagandas')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+
+        setPropagandas(data || [])
+      } catch (err) {
+        console.error('Erro ao carregar propagandas:', err)
+        setError('Erro ao carregar propagandas')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        window.location.href = '/login'
+        return
+      }
+      setUser(session.user)
+    }
+
     checkAuth()
-    loadPropagandas()
-  }, [])
-
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session) {
-      window.location.href = '/login'
-      return
-    }
-    setUser(session.user)
-  }
-
-  const loadPropagandas = async () => {
-    const { data, error } = await supabase
-      .from('propagandas')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (data) {
-      setPropagandas(data)
-    }
-    setLoading(false)
-  }
+    fetchPropagandas()
+  }, [supabase])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -51,7 +59,41 @@ export default function PropagandasPage() {
       .delete()
       .match({ id })
 
-    loadPropagandas()
+    const fetchPropagandas = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('propagandas')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+
+        setPropagandas(data || [])
+      } catch (err) {
+        console.error('Erro ao carregar propagandas:', err)
+        setError('Erro ao carregar propagandas')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPropagandas()
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-md bg-red-50 p-4">
+        <p className="text-sm text-red-700">{error}</p>
+      </div>
+    )
   }
 
   return (
