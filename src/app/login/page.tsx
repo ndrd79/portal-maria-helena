@@ -40,25 +40,43 @@ export default function Login() {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      const { data: { user }, error: erroAuth } = await supabase.auth.signInWithPassword({
+      // Primeiro, tenta fazer login
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      if (erroAuth) throw erroAuth
+      if (authError) {
+        console.error('Erro na autenticação:', authError)
+        throw authError
+      }
 
-      if (user) {
+      if (!authData.user) {
+        throw new Error('Usuário não encontrado após autenticação')
+      }
+
+      // Depois, tenta criar/atualizar o usuário
+      try {
         await criarOuAtualizarUsuario({
-          id: user.id,
-          email: user.email || '',
-          nome: user.user_metadata?.nome,
+          id: authData.user.id,
+          email: authData.user.email || '',
+          nome: authData.user.user_metadata?.nome,
         })
+      } catch (erroUsuario) {
+        console.error('Erro ao criar/atualizar usuário:', erroUsuario)
+        // Continua mesmo se houver erro na criação do usuário
       }
 
       router.push('/dashboard')
     } catch (erro) {
       console.error('Erro ao fazer login:', erro)
-      setError(erro instanceof Error ? erro.message : 'Erro ao fazer login')
+      if (erro instanceof Error) {
+        setError(erro.message === 'Invalid login credentials'
+          ? 'Email ou senha incorretos'
+          : erro.message)
+      } else {
+        setError('Erro ao fazer login. Por favor, tente novamente.')
+      }
     } finally {
       setLoading(false)
     }

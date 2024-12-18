@@ -15,9 +15,10 @@ export async function criarOuAtualizarUsuario(dadosUsuario: {
       .from('usuarios')
       .select('*')
       .eq('id', id)
-      .single()
+      .maybeSingle()
 
-    if (erroConsulta && erroConsulta.code !== 'PGRST116') {
+    if (erroConsulta) {
+      console.error('Erro ao consultar usuário:', erroConsulta)
       throw erroConsulta
     }
 
@@ -29,15 +30,22 @@ export async function criarOuAtualizarUsuario(dadosUsuario: {
         nome: nome || email.split('@')[0],
         tipo: 'usuario',
         status: 'ativo',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       }
 
       const { error: erroInsercao } = await supabase
         .from('usuarios')
         .insert([novoUsuario])
+        .select()
+        .single()
 
-      if (erroInsercao) throw erroInsercao
+      if (erroInsercao) {
+        console.error('Erro ao inserir usuário:', erroInsercao)
+        throw erroInsercao
+      }
 
-      return { ...novoUsuario } as Usuario
+      return novoUsuario as Usuario
     }
 
     return usuarioExistente
