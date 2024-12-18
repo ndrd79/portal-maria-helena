@@ -1,6 +1,8 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
   "outputDirectory": ".next",
   "headers": [
     {
@@ -16,9 +18,5 @@
   "env": {
     "NEXT_PUBLIC_FORCE_DYNAMIC": "true"
   },
-  "crons": [],
-  "kv": {
-    "maxDuration": 10,
-    "memory": 1024
-  }
+  "crons": []
 }
