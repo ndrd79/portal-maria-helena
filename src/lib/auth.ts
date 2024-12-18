@@ -10,30 +10,48 @@ export async function criarOuAtualizarUsuario(dadosUsuario: {
   const { id, email, nome } = dadosUsuario
 
   try {
-    const novoUsuario: Partial<Usuario> = {
-      id,
-      email,
-      nome: nome || email.split('@')[0],
-      tipo: 'usuario',
-      status: 'ativo',
-      updated_at: new Date().toISOString()
-    }
-
-    const { data: usuario, error: erroUpsert } = await supabase
+    // Primeiro tenta atualizar
+    const { data: usuarioAtualizado, error: erroUpdate } = await supabase
       .from('usuarios')
-      .upsert(novoUsuario, {
-        onConflict: 'id',
-        ignoreDuplicates: false
+      .update({
+        email,
+        nome: nome || email.split('@')[0],
+        updated_at: new Date().toISOString()
       })
+      .eq('id', id)
       .select()
       .single()
 
-    if (erroUpsert) {
-      console.error('Erro ao criar/atualizar usuário:', erroUpsert)
-      throw erroUpsert
+    // Se o usuário não existe, tenta criar
+    if (!usuarioAtualizado) {
+      const { data: usuarioCriado, error: erroInsert } = await supabase
+        .from('usuarios')
+        .insert({
+          id,
+          email,
+          nome: nome || email.split('@')[0],
+          tipo: 'usuario',
+          status: 'ativo',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+
+      if (erroInsert) {
+        console.error('Erro ao inserir usuário:', erroInsert)
+        throw erroInsert
+      }
+
+      return usuarioCriado as Usuario
     }
 
-    return usuario as Usuario
+    if (erroUpdate) {
+      console.error('Erro ao atualizar usuário:', erroUpdate)
+      throw erroUpdate
+    }
+
+    return usuarioAtualizado as Usuario
   } catch (erro) {
     console.error('Erro ao criar/atualizar usuário:', erro)
     throw erro
