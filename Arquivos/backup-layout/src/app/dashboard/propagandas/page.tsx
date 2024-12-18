@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Sidebar from '@/components/dashboard/Sidebar'
 import Header from '@/components/dashboard/Header'
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
@@ -10,6 +10,7 @@ export default function PropagandasPage() {
   const [user, setUser] = useState<any>(null)
   const [propagandas, setPropagandas] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
     checkAuth()
