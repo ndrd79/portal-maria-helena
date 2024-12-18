@@ -55,22 +55,38 @@ export default function PainelPrincipal() {
       // Primeiro tenta buscar o usuário
       const { data: usuario, error: erroUsuario } = await supabase
         .from('usuarios')
-        .select('*')
+        .select()
         .eq('id', userId)
         .maybeSingle()
 
+      if (erroUsuario) {
+        console.error('Erro ao buscar usuário:', erroUsuario)
+        throw erroUsuario
+      }
+
       // Se não encontrar o usuário, tenta criar
       if (!usuario) {
-        const { data: { user } } = await supabase.auth.getUser()
+        const { data: { user }, error: erroAuth } = await supabase.auth.getUser()
+        
+        if (erroAuth) {
+          console.error('Erro ao buscar dados do auth:', erroAuth)
+          throw erroAuth
+        }
+
         if (user) {
-          const novoUsuario = await criarOuAtualizarUsuario({
-            id: user.id,
-            email: user.email || '',
-            nome: user.user_metadata?.nome,
-          })
-          setUser(novoUsuario)
-          await carregarEstatisticas()
-          return
+          try {
+            const novoUsuario = await criarOuAtualizarUsuario({
+              id: user.id,
+              email: user.email || '',
+              nome: user.user_metadata?.nome,
+            })
+            setUser(novoUsuario)
+            await carregarEstatisticas()
+            return
+          } catch (erroCriacao) {
+            console.error('Erro ao criar usuário:', erroCriacao)
+            throw erroCriacao
+          }
         }
       }
 

@@ -10,20 +10,20 @@ export async function criarOuAtualizarUsuario(dadosUsuario: {
   const { id, email, nome } = dadosUsuario
 
   try {
-    // Primeiro tenta atualizar
-    const { data: usuarioAtualizado, error: erroUpdate } = await supabase
+    // Primeiro verifica se o usuário existe
+    const { data: usuarioExistente, error: erroConsulta } = await supabase
       .from('usuarios')
-      .update({
-        email,
-        nome: nome || email.split('@')[0],
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', id)
       .select()
+      .eq('id', id)
       .single()
 
-    // Se o usuário não existe, tenta criar
-    if (!usuarioAtualizado) {
+    if (erroConsulta && erroConsulta.code !== 'PGRST116') {
+      console.error('Erro ao consultar usuário:', erroConsulta)
+      throw erroConsulta
+    }
+
+    // Se o usuário não existe, cria um novo
+    if (!usuarioExistente) {
       const { data: usuarioCriado, error: erroInsert } = await supabase
         .from('usuarios')
         .insert({
@@ -31,9 +31,7 @@ export async function criarOuAtualizarUsuario(dadosUsuario: {
           email,
           nome: nome || email.split('@')[0],
           tipo: 'usuario',
-          status: 'ativo',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          status: 'ativo'
         })
         .select()
         .single()
@@ -45,6 +43,18 @@ export async function criarOuAtualizarUsuario(dadosUsuario: {
 
       return usuarioCriado as Usuario
     }
+
+    // Se o usuário existe, atualiza
+    const { data: usuarioAtualizado, error: erroUpdate } = await supabase
+      .from('usuarios')
+      .update({
+        email,
+        nome: nome || email.split('@')[0],
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single()
 
     if (erroUpdate) {
       console.error('Erro ao atualizar usuário:', erroUpdate)
