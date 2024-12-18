@@ -134,7 +134,7 @@ export default function AdminDashboard() {
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <h3 className="text-lg font-medium text-gray-900">Comércios</h3>
@@ -176,6 +176,26 @@ export default function AdminDashboard() {
                   className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
                 >
                   Ver todas →
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <h3 className="text-lg font-medium text-gray-900">Anúncios</h3>
+                <p className="mt-1 text-sm text-gray-500">Gerenciar publicidade no portal</p>
+                <div className="mt-3 space-y-1">
+                  <p className="text-xs text-gray-500">• Banners e carrosséis</p>
+                  <p className="text-xs text-gray-500">• Anúncios em cards</p>
+                  <p className="text-xs text-gray-500">• Métricas e relatórios</p>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-5 py-3">
+                <button 
+                  onClick={() => router.push('/admin/anuncios')}
+                  className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                >
+                  Gerenciar →
                 </button>
               </div>
             </div>
