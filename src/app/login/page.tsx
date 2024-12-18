@@ -11,6 +11,10 @@ export default function Login() {
   const supabase = createClient()
 
   useEffect(() => {
+    // Log para debug
+    console.log('URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+    console.log('KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+    
     const checkAuth = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession()
@@ -51,7 +55,7 @@ export default function Login() {
       }
 
       if (data?.session) {
-        router.replace('/dashboard')
+        router.replace('/admin/dashboard')
       } else {
         setError('Sessão não criada após login')
       }
