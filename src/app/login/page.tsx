@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabaseClient'
+import { criarOuAtualizarUsuario } from '@/lib/auth'
 
 export default function Login() {
   const router = useRouter()
@@ -32,32 +33,32 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
-    setError('')
+    setError(null)
 
     try {
       const formData = new FormData(e.currentTarget)
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data: { user }, error: erroAuth } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      if (error) {
-        console.error('Erro no login:', error)
-        setError(error.message)
-        return
+      if (erroAuth) throw erroAuth
+
+      if (user) {
+        await criarOuAtualizarUsuario({
+          id: user.id,
+          email: user.email || '',
+          nome: user.user_metadata?.nome,
+        })
       }
 
-      if (data?.session) {
-        router.replace('/dashboard')
-      } else {
-        setError('Sessão não criada após login')
-      }
-    } catch (err) {
-      console.error('Erro no login:', err)
-      setError('Erro ao fazer login. Por favor, tente novamente.')
+      router.push('/dashboard')
+    } catch (erro) {
+      console.error('Erro ao fazer login:', erro)
+      setError(erro instanceof Error ? erro.message : 'Erro ao fazer login')
     } finally {
       setLoading(false)
     }

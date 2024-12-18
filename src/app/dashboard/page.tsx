@@ -49,23 +49,36 @@ export default function PainelPrincipal() {
     }
   }
 
-  async function carregarUsuario(idUsuario: string) {
+  async function carregarUsuario(userId: string) {
     try {
       const { data: usuario, error: erroUsuario } = await supabase
         .from('usuarios')
         .select('*')
-        .eq('id', idUsuario)
+        .eq('id', userId)
         .single()
 
-      if (erroUsuario) throw erroUsuario
-      if (!usuario) throw new Error('Usuário não encontrado')
-      
+      if (erroUsuario) {
+        if (erroUsuario.code === 'PGRST116') {
+          // Usuário não encontrado na tabela usuarios
+          const { data: { user } } = await supabase.auth.getUser()
+          if (user) {
+            // Tenta criar o usuário
+            const novoUsuario = await criarOuAtualizarUsuario({
+              id: user.id,
+              email: user.email || '',
+              nome: user.user_metadata?.nome,
+            })
+            setUser(novoUsuario)
+            return
+          }
+        }
+        throw erroUsuario
+      }
+
       setUser(usuario)
-      await carregarEstatisticas()
     } catch (erro) {
       console.error('Erro ao carregar usuário:', erro)
       setError(erro instanceof Error ? erro.message : 'Erro ao carregar usuário')
-      router.push('/login')
     } finally {
       setLoading(false)
     }
