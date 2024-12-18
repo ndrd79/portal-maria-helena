@@ -7,7 +7,7 @@ import { Usuario, Anuncio } from '@/types/supabase'
 import { Alert } from '@/components/Alert'
 import Image from 'next/image'
 
-export default function AdminDashboard() {
+export default function PainelAdministrativo() {
   const router = useRouter()
   const supabase = createClientComponentClient()
   const [user, setUser] = useState<Usuario | null>(null)
@@ -18,73 +18,73 @@ export default function AdminDashboard() {
   const [novoAnuncio, setNovoAnuncio] = useState(false)
 
   useEffect(() => {
-    checkUser()
+    verificarUsuario()
   }, [])
 
-  async function checkUser() {
+  async function verificarUsuario() {
     try {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      const { data: { session }, error: erroSessao } = await supabase.auth.getSession()
       
-      if (sessionError) throw sessionError
+      if (erroSessao) throw erroSessao
       if (!session) {
         router.push('/login')
         return
       }
 
-      await loadUser(session.user.id)
-    } catch (err) {
-      console.error('Erro ao verificar sessão:', err)
-      setError(err instanceof Error ? err.message : 'Erro ao verificar sessão')
+      await carregarUsuario(session.user.id)
+    } catch (erro) {
+      console.error('Erro ao verificar sessão:', erro)
+      setError(erro instanceof Error ? erro.message : 'Erro ao verificar sessão')
       router.push('/login')
     }
   }
 
-  async function loadUser(userId: string) {
+  async function carregarUsuario(idUsuario: string) {
     try {
-      const { data, error } = await supabase
+      const { data: usuario, error: erroUsuario } = await supabase
         .from('usuarios')
         .select('*')
-        .eq('id', userId)
+        .eq('id', idUsuario)
         .single()
 
-      if (error) throw error
-      if (!data) throw new Error('Usuário não encontrado')
-      if (data.tipo !== 'admin') throw new Error('Acesso não autorizado')
+      if (erroUsuario) throw erroUsuario
+      if (!usuario) throw new Error('Usuário não encontrado')
+      if (usuario.tipo !== 'admin') throw new Error('Acesso não autorizado')
 
-      setUser(data)
-      await loadAnuncios()
-    } catch (err) {
-      console.error('Erro ao carregar usuário:', err)
-      setError(err instanceof Error ? err.message : 'Erro ao carregar usuário')
+      setUser(usuario)
+      await carregarAnuncios()
+    } catch (erro) {
+      console.error('Erro ao carregar usuário:', erro)
+      setError(erro instanceof Error ? erro.message : 'Erro ao carregar usuário')
       router.push('/login')
     } finally {
       setLoading(false)
     }
   }
 
-  async function loadAnuncios() {
+  async function carregarAnuncios() {
     try {
-      const { data, error } = await supabase
+      const { data: anuncios, error: erroAnuncios } = await supabase
         .from('anuncios')
         .select('*')
         .order('created_at', { ascending: false })
 
-      if (error) throw error
-      setAnuncios(data || [])
-    } catch (err) {
-      console.error('Erro ao carregar anúncios:', err)
-      setError(err instanceof Error ? err.message : 'Erro ao carregar anúncios')
+      if (erroAnuncios) throw erroAnuncios
+      setAnuncios(anuncios || [])
+    } catch (erro) {
+      console.error('Erro ao carregar anúncios:', erro)
+      setError(erro instanceof Error ? erro.message : 'Erro ao carregar anúncios')
     }
   }
 
-  const handleLogout = async () => {
+  async function fazerLogout() {
     try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
+      const { error: erroLogout } = await supabase.auth.signOut()
+      if (erroLogout) throw erroLogout
       router.push('/login')
-    } catch (err) {
-      console.error('Erro ao fazer logout:', err)
-      setError(err instanceof Error ? err.message : 'Erro ao fazer logout')
+    } catch (erro) {
+      console.error('Erro ao fazer logout:', erro)
+      setError(erro instanceof Error ? erro.message : 'Erro ao fazer logout')
     }
   }
 
@@ -117,12 +117,12 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-semibold">Portal Maria Helena - Admin</h1>
+              <h1 className="text-xl font-semibold">Portal Maria Helena - Painel Administrativo</h1>
             </div>
             <div className="flex items-center">
               <span className="text-gray-700 mr-4">Olá, {user.nome}</span>
               <button
-                onClick={handleLogout}
+                onClick={fazerLogout}
                 className="px-4 py-2 text-sm text-red-600 hover:text-red-800"
               >
                 Sair
