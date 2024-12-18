@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Usuario } from '@/types/supabase'
 
 export default function TestConnection() {
   const [loading, setLoading] = useState(true)
   const [users, setUsers] = useState<Usuario[]>([])
   const [error, setError] = useState<string | null>(null)
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
     async function fetchUsers() {
