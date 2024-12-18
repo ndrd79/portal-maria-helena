@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Sidebar from '@/components/dashboard/Sidebar'
 import Header from '@/components/dashboard/Header'
 import {
@@ -12,36 +11,36 @@ import {
 } from '@heroicons/react/24/outline'
 
 export default function DashboardPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [stats, setStats] = useState({
     noticias: 0,
     visitantes: 0,
     posts: 0,
   })
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
-    checkUser()
-  }, [])
-
-  const checkUser = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      
-      if (!session) {
-        router.push('/login')
-        return
+    const getUser = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!session) {
+          window.location.href = '/login'
+          return
+        }
+        setUser(session.user)
+        await loadStats()
+      } catch (err) {
+        console.error('Erro ao carregar usuário:', err)
+        setError('Erro ao carregar usuário')
+      } finally {
+        setLoading(false)
       }
-      
-      setUser(session.user)
-      await loadStats()
-      setLoading(false)
-    } catch (error) {
-      console.error('Erro ao verificar usuário:', error)
-      router.push('/login')
     }
-  }
+
+    getUser()
+  }, [supabase])
 
   const loadStats = async () => {
     // Carregar estatísticas do Supabase
@@ -61,11 +60,16 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Carregando...</p>
-        </div>
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-md bg-red-50 p-4">
+        <p className="text-sm text-red-700">{error}</p>
       </div>
     )
   }

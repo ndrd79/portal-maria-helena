@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Sidebar from '@/components/dashboard/Sidebar'
 import Header from '@/components/dashboard/Header'
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
@@ -10,32 +10,40 @@ export default function NoticiasPage() {
   const [user, setUser] = useState<any>(null)
   const [noticias, setNoticias] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        window.location.href = '/login'
+        return
+      }
+      setUser(session.user)
+    }
+
+    const fetchNoticias = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('noticias')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+
+        setNoticias(data || [])
+      } catch (err) {
+        console.error('Erro ao carregar notícias:', err)
+        setError('Erro ao carregar notícias')
+      } finally {
+        setLoading(false)
+      }
+    }
+
     checkAuth()
-    loadNoticias()
-  }, [])
-
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session) {
-      window.location.href = '/login'
-      return
-    }
-    setUser(session.user)
-  }
-
-  const loadNoticias = async () => {
-    const { data, error } = await supabase
-      .from('noticias')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (data) {
-      setNoticias(data)
-    }
-    setLoading(false)
-  }
+    fetchNoticias()
+  }, [supabase])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -51,7 +59,41 @@ export default function NoticiasPage() {
       .delete()
       .match({ id })
 
-    loadNoticias()
+    const fetchNoticias = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('noticias')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+
+        setNoticias(data || [])
+      } catch (err) {
+        console.error('Erro ao carregar notícias:', err)
+        setError('Erro ao carregar notícias')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchNoticias()
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-md bg-red-50 p-4">
+        <p className="text-sm text-red-700">{error}</p>
+      </div>
+    )
   }
 
   return (
