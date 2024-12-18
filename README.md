@@ -61,6 +61,95 @@ Portal completo para cidade com recursos de comércio, notícias e interação c
 - Otimização de imagens e conteúdo
 - Core Web Vitals
 
+## Plano de Desenvolvimento - Sistema de Permissões
+
+### Fase 1: Preparação e Estrutura Base
+- [ ] Criar tipos e interfaces base para o sistema de permissões
+  - Definir Permission, Role, UserPermissions
+  - Criar schemas de validação com Zod
+- [ ] Configurar Vercel KV para cache de permissões
+- [ ] Criar tabelas no banco de dados
+  - roles (funções)
+  - permissions (permissões)
+  - user_roles (relacionamento usuário-função)
+  - user_permissions (permissões específicas por usuário)
+
+### Fase 2: Implementação do Core
+- [ ] Implementar serviços base
+  - PermissionService para gerenciar permissões
+  - RoleService para gerenciar funções
+  - CacheService para interface com Vercel KV
+- [ ] Criar middlewares de autenticação/autorização
+- [ ] Implementar hooks e contexts React
+  - usePermissions
+  - useRoles
+  - PermissionContext
+
+### Fase 3: Componentes e UI
+- [ ] Criar componentes de proteção de rota
+  - ProtectedRoute
+  - PermissionGate
+- [ ] Implementar UI de gerenciamento
+  - Tela de gerenciamento de funções
+  - Tela de gerenciamento de permissões
+  - Interface de atribuição de permissões
+
+### Fase 4: Migração e Testes
+- [ ] Criar scripts de migração
+  - Migrar dados do Supabase
+  - Criar funções e permissões iniciais
+- [ ] Implementar testes
+  - Testes unitários dos serviços
+  - Testes de integração
+  - Testes E2E das rotas protegidas
+
+### Fase 5: Deploy e Monitoramento
+- [ ] Configurar ambiente de produção
+  - Variáveis de ambiente
+  - Secrets da Vercel
+- [ ] Implementar logs e monitoramento
+  - Integração com Vercel Analytics
+  - Sistema de alertas
+- [ ] Documentação final
+  - Guia de uso
+  - Documentação técnica
+  - Exemplos de implementação
+
+### Comandos Git por Fase
+
+```bash
+# Fase 1
+git checkout -b feat/permissions-structure
+# Commits após cada subfase
+git push origin feat/permissions-structure
+
+# Fase 2
+git checkout -b feat/permissions-core
+# Commits após cada serviço/middleware
+git push origin feat/permissions-core
+
+# Fase 3
+git checkout -b feat/permissions-ui
+# Commits após cada componente
+git push origin feat/permissions-ui
+
+# Fase 4
+git checkout -b feat/permissions-migration
+# Commits após scripts e testes
+git push origin feat/permissions-migration
+
+# Fase 5
+git checkout -b feat/permissions-deploy
+# Commits após configurações
+git push origin feat/permissions-deploy
+```
+
+### Rollback Plan
+Em caso de necessidade de rollback:
+1. Manter sistema atual do Supabase em paralelo
+2. Implementar feature flags para controle gradual
+3. Manter backups dos dados antes da migração
+
 ## Tecnologias Utilizadas
 
 ### Frontend
