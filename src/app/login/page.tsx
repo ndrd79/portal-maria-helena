@@ -2,19 +2,24 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/lib/supabaseClient'
 
 export default function Login() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session) {
-        router.replace('/dashboard')
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        if (error) throw error
+        if (session) {
+          router.replace('/dashboard')
+        }
+      } catch (err) {
+        console.error('Erro ao verificar sessão:', err)
       }
     }
     checkAuth()
@@ -37,7 +42,11 @@ export default function Login() {
 
       if (error) {
         console.error('Erro no login:', error)
-        setError(error.message)
+        if (error.message === 'Invalid API key') {
+          setError('Erro de configuração do servidor. Por favor, tente novamente mais tarde.')
+        } else {
+          setError(error.message)
+        }
         return
       }
 
@@ -48,7 +57,7 @@ export default function Login() {
       }
     } catch (err) {
       console.error('Erro no login:', err)
-      setError('Erro ao fazer login')
+      setError('Erro ao fazer login. Por favor, tente novamente.')
     } finally {
       setLoading(false)
     }
