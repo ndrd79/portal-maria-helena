@@ -36,7 +36,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     loadUser()
-  }, [router])
+  }, [])
 
   async function loadUser() {
     try {
@@ -63,7 +63,6 @@ export default function AdminDashboard() {
     } catch (err) {
       console.error('Erro ao carregar usuário:', err)
       setError(err instanceof Error ? err.message : 'Erro ao carregar usuário')
-      router.push('/login')
     } finally {
       setLoading(false)
     }
@@ -108,26 +107,6 @@ export default function AdminDashboard() {
     )
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-100 p-6">
-        <div className="max-w-7xl mx-auto">
-          <Alert type="error" message={error} />
-        </div>
-      </div>
-    )
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gray-100 p-6">
-        <div className="max-w-7xl mx-auto">
-          <Alert type="error" message="Usuário não encontrado" />
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-white shadow-sm">
@@ -137,7 +116,7 @@ export default function AdminDashboard() {
               <h1 className="text-xl font-semibold">Portal Maria Helena - Admin</h1>
             </div>
             <div className="flex items-center">
-              <span className="text-gray-700 mr-4">Olá, {user.nome}</span>
+              {user && <span className="text-gray-700 mr-4">Olá, {user.nome}</span>}
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 text-sm text-red-600 hover:text-red-800"
@@ -149,9 +128,15 @@ export default function AdminDashboard() {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {error && (
+            <div className="mb-4">
+              <Alert type="error" message={error} />
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <h3 className="text-lg font-medium text-gray-900">Comércios</h3>
@@ -241,9 +226,10 @@ export default function AdminDashboard() {
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-12 w-12 relative">
                               <Image
-                                src={anuncio.imagem_url}
+                                src={anuncio.imagem_url || '/placeholder.png'}
                                 alt={anuncio.titulo}
-                                fill
+                                width={48}
+                                height={48}
                                 className="object-cover rounded"
                               />
                             </div>
@@ -290,7 +276,7 @@ export default function AdminDashboard() {
             </div>
           )}
         </div>
-      </main>
+      </div>
     </div>
   )
 }
