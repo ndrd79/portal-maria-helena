@@ -42,7 +42,7 @@ export default function PainelPrincipal() {
         return
       }
 
-      await carregarUsuario(session.user.id)
+      await carregarUsuario()
     } catch (erro) {
       console.error('Erro ao verificar sessão:', erro)
       setError(erro instanceof Error ? erro.message : 'Erro ao verificar sessão')
@@ -50,55 +50,42 @@ export default function PainelPrincipal() {
     }
   }
 
-  async function carregarUsuario(userId: string) {
+  async function carregarUsuario() {
     try {
-      // Primeiro tenta buscar o usuário
-      const { data: usuario, error: erroUsuario } = await supabase
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+      if (userError) {
+        console.error('Erro ao buscar usuário:', userError)
+        throw userError
+      }
+
+      if (!user) {
+        console.error('Usuário não encontrado')
+        throw new Error('Usuário não encontrado')
+      }
+
+      const { data: usuarioExistente, error: erroConsulta } = await supabase
         .from('usuarios')
         .select()
-        .eq('id', userId)
-        .maybeSingle()
+        .eq('email', user.email)
+        .single()
 
-      if (erroUsuario) {
-        console.error('Erro ao buscar usuário:', erroUsuario)
-        throw erroUsuario
+      if (erroConsulta && erroConsulta.code !== 'PGRST116') {
+        console.error('Erro ao consultar usuário:', erroConsulta)
+        throw erroConsulta
       }
 
-      // Se não encontrar o usuário, tenta criar
-      if (!usuario) {
-        const { data: { user }, error: erroAuth } = await supabase.auth.getUser()
-        
-        if (erroAuth) {
-          console.error('Erro ao buscar dados do auth:', erroAuth)
-          throw erroAuth
-        }
-
-        if (user) {
-          try {
-            const novoUsuario = await criarOuAtualizarUsuario({
-              id: user.id,
-              email: user.email || '',
-              nome: user.user_metadata?.nome,
-            })
-            setUser(novoUsuario)
-            await carregarEstatisticas()
-            return
-          } catch (erroCriacao) {
-            console.error('Erro ao criar usuário:', erroCriacao)
-            throw erroCriacao
-          }
-        }
+      if (!usuarioExistente) {
+        return await criarOuAtualizarUsuario({
+          id: user.id,
+          email: user.email || '',
+          nome: user.user_metadata?.nome
+        })
       }
 
-      // Se encontrou o usuário, atualiza o estado
-      if (usuario) {
-        setUser(usuario)
-        await carregarEstatisticas()
-        return
-      }
-
-      // Se chegou aqui, é porque não conseguiu nem encontrar nem criar o usuário
-      throw new Error('Não foi possível carregar ou criar o usuário')
+      setUser(usuarioExistente)
+      await carregarEstatisticas()
+      return usuarioExistente
     } catch (erro) {
       console.error('Erro ao carregar usuário:', erro)
       setError('Erro ao carregar dados do usuário. Por favor, tente novamente.')

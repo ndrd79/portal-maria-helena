@@ -10,11 +10,11 @@ export async function criarOuAtualizarUsuario(dadosUsuario: {
   const { id, email, nome } = dadosUsuario
 
   try {
-    // Primeiro verifica se o usuário existe
+    // Primeiro tenta buscar por email
     const { data: usuarioExistente, error: erroConsulta } = await supabase
       .from('usuarios')
       .select()
-      .eq('id', id)
+      .eq('email', email)
       .single()
 
     if (erroConsulta && erroConsulta.code !== 'PGRST116') {
@@ -22,46 +22,47 @@ export async function criarOuAtualizarUsuario(dadosUsuario: {
       throw erroConsulta
     }
 
-    // Se o usuário não existe, cria um novo
-    if (!usuarioExistente) {
-      const { data: usuarioCriado, error: erroInsert } = await supabase
+    // Se encontrou usuário, atualiza
+    if (usuarioExistente) {
+      const { data: usuarioAtualizado, error: erroUpdate } = await supabase
         .from('usuarios')
-        .insert({
+        .update({
           id,
           email,
           nome: nome || email.split('@')[0],
-          tipo: 'usuario',
-          status: 'ativo'
+          updated_at: new Date().toISOString()
         })
+        .eq('email', email)
         .select()
         .single()
 
-      if (erroInsert) {
-        console.error('Erro ao inserir usuário:', erroInsert)
-        throw erroInsert
+      if (erroUpdate) {
+        console.error('Erro ao atualizar usuário:', erroUpdate)
+        throw erroUpdate
       }
 
-      return usuarioCriado as Usuario
+      return usuarioAtualizado as Usuario
     }
 
-    // Se o usuário existe, atualiza
-    const { data: usuarioAtualizado, error: erroUpdate } = await supabase
+    // Se não encontrou, cria novo
+    const { data: usuarioCriado, error: erroInsert } = await supabase
       .from('usuarios')
-      .update({
+      .insert({
+        id,
         email,
         nome: nome || email.split('@')[0],
-        updated_at: new Date().toISOString()
+        tipo: 'usuario',
+        status: 'ativo'
       })
-      .eq('id', id)
       .select()
       .single()
 
-    if (erroUpdate) {
-      console.error('Erro ao atualizar usuário:', erroUpdate)
-      throw erroUpdate
+    if (erroInsert) {
+      console.error('Erro ao inserir usuário:', erroInsert)
+      throw erroInsert
     }
 
-    return usuarioAtualizado as Usuario
+    return usuarioCriado as Usuario
   } catch (erro) {
     console.error('Erro ao criar/atualizar usuário:', erro)
     throw erro
