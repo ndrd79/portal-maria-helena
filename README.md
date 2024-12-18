@@ -150,6 +150,80 @@ Em caso de necessidade de rollback:
 2. Implementar feature flags para controle gradual
 3. Manter backups dos dados antes da migração
 
+## Sistema de Permissões
+
+### Configuração Inicial
+
+1. Configure as variáveis de ambiente do Vercel KV:
+```bash
+KV_URL=""
+KV_REST_API_URL=""
+KV_REST_API_TOKEN=""
+KV_REST_API_READ_ONLY_TOKEN=""
+```
+
+2. Execute a migração do banco de dados:
+```bash
+npm run migrate:permissions
+```
+
+### Estrutura
+
+O sistema de permissões é composto por:
+
+1. **Serviços Core**:
+   - `PermissionService`: Gerencia permissões dos usuários
+   - `RoleService`: Gerencia funções/roles
+   - `CacheService`: Cache de permissões com Vercel KV
+
+2. **Componentes**:
+   - `ProtectedRoute`: Protege rotas baseado em permissões
+   - `PermissionGate`: Controla visibilidade de elementos UI
+   - `PermissionManagement`: Interface de gerenciamento
+   - `RoleSelector`: Seleção de funções
+
+3. **Testes**:
+   - `npm run test`: Executa todos os testes
+   - `npm run test:watch`: Executa testes em modo watch
+
+### Uso
+
+1. **Proteger uma Rota**:
+```tsx
+<ProtectedRoute permissions={['read:usuarios']}>
+  <MinhaRota />
+</ProtectedRoute>
+```
+
+2. **Controlar Visibilidade**:
+```tsx
+<PermissionGate permissions={['create:usuarios']}>
+  <BotaoCriarUsuario />
+</PermissionGate>
+```
+
+3. **Selecionar Função**:
+```tsx
+<RoleSelector 
+  userId={user.id}
+  onRoleChange={handleRoleChange}
+/>
+```
+
+### Permissões Disponíveis
+
+- `read:usuarios`: Visualizar usuários
+- `create:usuarios`: Criar usuários
+- `update:usuarios`: Atualizar usuários
+- `delete:usuarios`: Deletar usuários
+- `manage:usuarios`: Gerenciar todos os aspectos de usuários
+
+### Funções Padrão
+
+- `admin`: Acesso total ao sistema
+- `comerciante`: Acesso ao módulo de comércios
+- `usuario`: Acesso básico ao sistema
+
 ## Tecnologias Utilizadas
 
 ### Frontend
