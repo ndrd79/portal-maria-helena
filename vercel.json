@@ -15,5 +15,10 @@
   ],
   "env": {
     "NEXT_PUBLIC_FORCE_DYNAMIC": "true"
+  },
+  "crons": [],
+  "kv": {
+    "maxDuration": 10,
+    "memory": 1024
   }
 }
