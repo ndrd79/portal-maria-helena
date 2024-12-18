@@ -7,6 +7,7 @@ import Sidebar from '@/components/dashboard/Sidebar'
 import Header from '@/components/dashboard/Header'
 import { Alert } from '@/components/Alert'
 import { Usuario } from '@/types/supabase'
+import { criarOuAtualizarUsuario } from '@/lib/auth'
 import {
   NewspaperIcon,
   ChartBarIcon,
