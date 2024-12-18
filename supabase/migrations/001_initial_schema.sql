@@ -49,7 +49,7 @@ CREATE TABLE categorias (
 
 -- Tabela de usuários
 CREATE TABLE usuarios (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,
     nome TEXT NOT NULL,
     tipo user_role NOT NULL DEFAULT 'usuario',
