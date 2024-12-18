@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/dashboard/Sidebar'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export default function DashboardLayout({
   children,
@@ -11,20 +11,30 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const router = useRouter()
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!session) {
+          router.replace('/login')
+        }
+      } catch (error) {
+        console.error('Erro ao verificar autenticação:', error)
         router.replace('/login')
       }
     }
     checkAuth()
-  }, [router])
+  }, [router, supabase])
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.replace('/login')
+    try {
+      await supabase.auth.signOut()
+      router.replace('/login')
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error)
+    }
   }
 
   return (
