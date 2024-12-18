@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export default function AuthRedirect() {
   useEffect(() => {
+    const supabase = createClientComponentClient()
     async function redirect() {
       try {
         console.log('Verificando sessão...')
